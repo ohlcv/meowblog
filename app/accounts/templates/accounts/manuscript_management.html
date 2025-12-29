@@ -1,0 +1,319 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+    {% if is_own_page %}
+        稿件管理 - Meow Blog
+    {% else %}
+        {{ target_user.username }} 的稿件管理 - Meow Blog
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="fade-in-up page-container">
+        <div class="page-header">
+            <div class="page-header-content">
+                <div class="page-header-title">
+                    <h1 class="page-title" style="margin: 0;">
+                        {% if is_own_page %}
+                            📁 稿件管理
+                        {% else %}
+                            📁 {{ target_user.username }} 的稿件管理
+                        {% endif %}
+                    </h1>
+                </div>
+                <div class="page-header-actions">
+                    {% if is_own_page %}
+                        <a href="{% url 'accounts:profile_center' %}" class="btn-back">← 返回个人中心</a>
+                    {% else %}
+                        <a href="{% url 'accounts:user_profile' user_id=target_user.id %}" class="btn-back">← 返回{{ target_user.username }}的个人中心</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        {# 显示消息 - 由全局JavaScript系统处理 #}
+        {% if messages %}
+            <div style="display: none;">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {# 重新设计的创作统计卡片 #}
+        <div class="card" style="background: linear-gradient(135deg, #ffffff 0%, #fef7f7 100%); border: 1px solid rgba(251, 114, 153, 0.1); box-shadow: 0 8px 32px rgba(251, 114, 153, 0.1);">
+            <div class="stats-header">
+                <h2 class="stats-title">📊 创作统计</h2>
+                <p class="stats-subtitle">记录你的创作历程</p>
+            </div>
+            
+            {# 用户头像和基本信息 #}
+            <div style="display: flex; align-items: center; justify-content: center; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                    {% if is_own_page %}
+                        {% include 'blog/includes/user_avatar.html' with user=user size='large' show_name=True link_to_profile=False %}
+                    {% else %}
+                        {% include 'blog/includes/user_avatar.html' with user=target_user size='large' show_name=True link_to_profile=True current_user=user is_following=is_following %}
+                    {% endif %}
+                </div>
+            </div>
+            
+            {# 统计数据网格 #}
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1.5rem; max-width: 800px; margin: 0 auto;">
+                <div class="stat-card">
+                    <div class="stat-number">{{ total_categories }}</div>
+                    <div class="stat-label">总分类数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ total_posts }}</div>
+                    <div class="stat-label">总文章数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ total_words }}</div>
+                    <div class="stat-label">总字数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ total_likes }}</div>
+                    <div class="stat-label">总点赞数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ total_favorites }}</div>
+                    <div class="stat-label">总收藏数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ total_comments }}</div>
+                    <div class="stat-label">总评论数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ followers_count }}</div>
+                    <div class="stat-label">粉丝数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ following_count }}</div>
+                    <div class="stat-label">关注数</div>
+                </div>
+            </div>
+        </div>
+
+
+        {# 创建新分类 - 只在查看自己的页面时显示 #}
+        {% if is_own_page %}
+        <div class="card" style="margin-bottom: 2rem;">
+            <h2 class="section-title">创建新分类</h2>
+            <form method="post" id="createCategoryForm">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="form-label" for="{{ category_form.name.id_for_label }}">
+                        {{ category_form.name.label }}
+                    </label>
+                    <input type="text" class="form-control" name="{{ category_form.name.name }}" id="{{ category_form.name.id_for_label }}" placeholder="输入分类名称，例如：技术教程、生活感悟" maxlength="100" required>
+                    {% if category_form.name.errors %}
+                        <div style="color: #dc3545; font-size: 0.9rem; margin-top: 0.5rem;">
+                            {{ category_form.name.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+                <button type="submit" name="create_category" class="btn btn-primary" style="width: 100%;">🌱 创建分类</button>
+            </form>
+        </div>
+        {% endif %}
+
+        {# 文章分类 - 第二层 #}
+        <div>
+                {% if categories_with_stats %}
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        {% for category_data in categories_with_stats %}
+                            <div class="card" style="transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0, 0, 0, 0.1)'">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1.5rem;">
+                                    <div style="flex: 1;">
+                                        <h3 class="subsection-title">
+                                            <a href="{% if is_own_page %}{% url 'accounts:category_posts' category_id=category_data.category.id %}{% else %}{% url 'accounts:user_category_posts' user_id=target_user.id category_id=category_data.category.id %}{% endif %}" style="text-decoration: none; color: var(--primary-color); transition: color 0.3s ease; font-weight: 600;" onmouseover="this.style.color='var(--primary-dark)'" onmouseout="this.style.color='var(--primary-color)'">📂 {{ category_data.category.name }}</a>
+                                        </h3>
+                                        <div style="margin: 0; color: #6c757d; font-size: 1rem; display: flex; align-items: center; gap: 1rem;">
+                                            <span>{{ category_data.post_count }} 篇文章</span>
+                                            <span style="font-size: 0.9rem; opacity: 0.8;">{{ category_data.word_count }} 字</span>
+                                        </div>
+                                    </div>
+                                    {% if is_own_page %}
+                                    <div style="display: flex; gap: 0.75rem;">
+                                        <a href="{% url 'accounts:edit_category' category_id=category_data.category.id %}" class="btn btn-warning" style="padding: 0.5rem 1rem; font-size: 0.9rem;">✏️ 编辑</a>
+                                        <a href="{% url 'accounts:delete_category' category_id=category_data.category.id %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;">🗑️ 删除</a>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div style="border-top: 1px solid #e9ecef; padding-top: 1rem; display: flex; gap: 1rem; align-items: center;">
+                                    <a href="{% if is_own_page %}{% url 'accounts:category_posts' category_id=category_data.category.id %}{% else %}{% url 'accounts:user_category_posts' user_id=target_user.id category_id=category_data.category.id %}{% endif %}" class="btn btn-primary" style="flex: 1;">📄 {% if is_own_page %}管理文章{% else %}查看文章{% endif %}</a>
+                                    {% if is_own_page %}
+                                    <a href="{% url 'accounts:create_post' category_id=category_data.category.id %}" class="btn btn-primary" style="flex: 1;">+ 新建文章</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="card" style="text-align: center; padding: 3rem;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.6;">📁</div>
+                        <h3 class="subsection-title" style="color: #6c757d; text-align: center;">还没有创建任何文章分类</h3>
+                        <p style="color: #6c757d; margin-bottom: 0; text-align: center;">创建你的第一个分类来开始整理文章吧！</p>
+                    </div>
+                {% endif %}
+                
+        </div>
+
+        {# 未分类文章 - 第三层 #}
+        <div class="card" style="margin-top: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1.5rem;">
+                <div style="flex: 1;">
+                    <h3 class="subsection-title" style="display: flex; align-items: center; gap: 0.5rem;">
+                        📄 未分类文章
+                    </h3>
+                    <div style="margin: 0; color: #6c757d; font-size: 1rem; display: flex; align-items: center; gap: 1rem;">
+                        <span>{{ uncategorized_posts }} 篇文章</span>
+                        <span style="font-size: 0.9rem; opacity: 0.8;">{{ uncategorized_word_count }} 字</span>
+                    </div>
+                </div>
+            </div>
+            <p style="margin: 0 0 1.5rem 0; color: #6c757d; line-height: 1.6;">管理没有指定分类的文章</p>
+            <div style="display: flex; gap: 1rem;">
+                <a href="{% if is_own_page %}{% url 'accounts:category_posts' category_id=0 %}{% else %}{% url 'accounts:user_category_posts' user_id=target_user.id category_id=0 %}{% endif %}" class="btn btn-primary" style="flex: 1;">📄 {% if is_own_page %}管理文章{% else %}查看文章{% endif %}</a>
+                {% if is_own_page %}
+                <a href="{% url 'accounts:create_post' %}" class="btn btn-primary" style="flex: 1;">+ 新建文章</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* 新的统计卡片样式 */
+        .stat-card {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(251, 114, 153, 0.15);
+            border-radius: 12px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(251, 114, 153, 0.2);
+            border-color: rgba(251, 114, 153, 0.3);
+        }
+        
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+        
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            line-height: 1.2;
+        }
+        
+        /* 旧的统计项样式（保留兼容性） */
+        .stat-item {
+            transition: all 0.3s ease;
+        }
+        
+        .stat-item:hover {
+            transform: scale(1.05);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .stat-card {
+                padding: 1rem 0.75rem;
+            }
+            
+            .stat-number {
+                font-size: 1.8rem;
+            }
+            
+            .stat-label {
+                font-size: 0.8rem;
+            }
+            
+            h1 {
+                font-size: 2rem !important;
+            }
+            
+            .card {
+                padding: 1.5rem !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stat-card {
+                padding: 0.75rem 0.5rem;
+            }
+            
+            .stat-number {
+                font-size: 1.5rem;
+            }
+            
+            .stat-label {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+    
+    <script>
+        // 处理CSRF token刷新
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('createCategoryForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    // 获取最新的CSRF token
+                    fetch(window.location.href, {
+                        method: 'GET',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                        }
+                    })
+                    .then(response => response.text())
+                    .then(html => {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(html, 'text/html');
+                        const newToken = doc.querySelector('[name=csrfmiddlewaretoken]');
+                        if (newToken) {
+                            const currentToken = form.querySelector('[name=csrfmiddlewaretoken]');
+                            if (currentToken) {
+                                currentToken.value = newToken.value;
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.log('CSRF token refresh failed:', error);
+                    });
+            });
+        }
+        
+    });
+    </script>
+{% endblock %}

@@ -1,0 +1,28 @@
+<!-- 统一搜索输入框组件 -->
+{% comment %}
+使用示例：
+{% include 'components/search_input.html' with name="search" value=search_query placeholder="搜索文章标题、内容或作者..." %}
+{% endcomment %}
+
+<div class="search-container">
+    <form method="get" class="search-form">
+        <input type="text" 
+               name="{{ name|default:'search' }}" 
+               value="{{ value|default:'' }}" 
+               placeholder="{{ placeholder|default:'搜索...' }}" 
+               class="search-input">
+        <button type="submit" class="btn btn-primary search-button">
+            🔍 搜索
+        </button>
+        {% if value %}
+            <a href="{{ clear_url|default:request.path }}" class="btn btn-secondary">
+                🗑️ 清除
+            </a>
+        {% endif %}
+        {% if hidden_params %}
+            {% for key, value in hidden_params.items %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}">
+            {% endfor %}
+        {% endif %}
+    </form>
+</div>

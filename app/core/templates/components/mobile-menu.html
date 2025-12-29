@@ -1,0 +1,14 @@
+<!-- 移动端菜单组件 -->
+<div class="mobile-menu" id="mobileMenu">
+    <div class="nav-links">
+        <!-- 主要导航 -->
+        <a href="{% url 'blog:post_list' %}" class="nav-link">📝 博客</a>
+        <a href="{% url 'about' %}" class="nav-link">ℹ️ 关于</a>
+        
+        {% if not user.is_authenticated %}
+            <div class="menu-divider"></div>
+            <a href="{% url 'accounts:login' %}" class="nav-link nav-link-login">🔑 登录</a>
+            <a href="{% url 'accounts:signup' %}" class="nav-link nav-link-signup">📝 注册</a>
+        {% endif %}
+    </div>
+</div>

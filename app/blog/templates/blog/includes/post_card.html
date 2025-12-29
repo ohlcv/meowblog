@@ -1,0 +1,134 @@
+{% load blog_extras %}
+{% comment %}
+文章卡片复用组件
+参数：
+- post: 文章对象
+- show_actions: 是否显示编辑/删除按钮 (默认: false)
+- show_author_link: 是否显示作者链接 (默认: true)
+- show_visibility: 是否显示可见权限 (默认: true)
+- show_stats: 是否显示统计信息 (默认: true)
+- show_content_preview: 是否显示内容预览 (默认: true)
+- show_read_more: 是否显示"阅读全文"按钮 (默认: true)
+- card_style: 卡片样式类型 ('list'|'detail'|'profile') (默认: 'list')
+{% endcomment %}
+
+<article class="card post-card" style="background: #ffffff; transition: all 0.3s ease; cursor: pointer; position: relative;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0, 0, 0, 0.1)'" data-post-url="{% get_post_url post %}">
+    {% if card_style|default:'list' == 'list' %}
+        {# 列表页样式 - 简洁版 #}
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+            <div style="flex: 1;">
+                <h2 class="subsection-title">
+                    <a href="{% get_post_url post %}" style="color: #2c3e50; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#667eea'" onmouseout="this.style.color='#2c3e50'">{{ post.title }}</a>
+                </h2>
+                
+                {# 作者头像和元数据并排显示 #}
+                <div style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        {% include 'blog/includes/user_avatar.html' with user=post.author size='small' current_user=user is_following=post.is_following show_follow_button=true link_to_profile=True %}
+                    </div>
+                    <div style="flex: 1; min-width: 0;">
+                        {% include 'blog/includes/post_metadata.html' with post=post %}
+                    </div>
+                </div>
+                
+                {% if show_content_preview %}
+                    {% if post.text_preview %}
+                        <p style="margin: 0; color: #555; line-height: 1.7; font-size: 1.05rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">{{ post.text_preview }}</p>
+                    {% else %}
+                        <p style="margin: 0; color: #555; line-height: 1.7; font-size: 1.05rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">{{ post.content|truncatewords:30 }}</p>
+                    {% endif %}
+                {% endif %}
+            </div>
+            
+            {% if show_actions %}
+            <div style="display: flex; flex-direction: row; gap: 0.5rem; margin-left: 1rem;" onclick="event.stopPropagation();">
+                <a href="{% url 'accounts:edit_post' post_id=post.id %}" class="btn btn-warning" style="padding: 0.5rem 1rem; font-size: 0.9rem;">✏️ 编辑</a>
+                <a href="{% url 'accounts:delete_post' post_id=post.id %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;">🗑️ 删除</a>
+            </div>
+            {% endif %}
+        </div>
+        
+    {% elif card_style == 'detail' %}
+        {# 详情页样式 - 带操作按钮 #}
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+            <div style="flex: 1;">
+                <h2 class="subsection-title">
+                    <a href="{% get_post_url post %}" style="color: #2c3e50; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#667eea'" onmouseout="this.style.color='#2c3e50'">{{ post.title }}</a>
+                </h2>
+                
+                {# 作者头像和元数据并排显示 #}
+                <div style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        {% include 'blog/includes/user_avatar.html' with user=post.author size='small' current_user=user is_following=post.is_following show_follow_button=true link_to_profile=True %}
+                    </div>
+                    <div style="flex: 1; min-width: 0;">
+                        {% include 'blog/includes/post_metadata.html' with post=post %}
+                    </div>
+                </div>
+                
+                {% if show_content_preview %}
+                    {% if post.text_preview %}
+                        <p style="margin: 0; color: #555; line-height: 1.7; font-size: 1.05rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">{{ post.text_preview }}</p>
+                    {% else %}
+                        <p style="margin: 0; color: #555; line-height: 1.7; font-size: 1.05rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">{{ post.content|truncatewords:30 }}</p>
+                    {% endif %}
+                {% endif %}
+            </div>
+            
+            {% if show_actions %}
+            <div style="display: flex; flex-direction: row; gap: 0.5rem; margin-left: 1rem;" onclick="event.stopPropagation();">
+                <a href="{% url 'accounts:edit_post' post_id=post.id %}" class="btn btn-warning" style="padding: 0.5rem 1rem; font-size: 0.9rem;">✏️ 编辑</a>
+                <a href="{% url 'accounts:delete_post' post_id=post.id %}" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;">🗑️ 删除</a>
+            </div>
+            {% endif %}
+        </div>
+        
+        {% if show_read_more %}
+        <div style="border-top: 1px solid #e9ecef; padding-top: 1rem; display: flex; justify-content: space-between; align-items: center;" onclick="event.stopPropagation();">
+            <a href="{% get_post_url post %}" class="btn btn-primary" style="padding: 0.5rem 1.5rem;">📖 阅读全文</a>
+            {% if show_stats %}
+            <div style="display: flex; align-items: center; gap: 1rem; color: #6c757d; font-size: 0.9rem;">
+                <span>💬 {{ post.comments.count }} 评论</span>
+                <span>{{ post.word_count }} 字</span>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+    {% elif card_style == 'profile' %}
+        {# 个人资料页样式 - 紧凑版 #}
+        <h3 style="margin-bottom: 1rem;">
+            <a href="{% get_post_url post %}" style="color: #2c3e50; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#667eea'" onmouseout="this.style.color='#2c3e50'">{{ post.title }}</a>
+        </h3>
+        
+        {% include 'blog/includes/post_metadata.html' with post=post mode='compact' show_author_link=show_author_link %}
+        
+        {% if show_content_preview %}
+            {% if post.text_preview %}
+                <p style="margin: 0; color: #555; line-height: 1.7; font-size: 1rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">{{ post.text_preview }}</p>
+            {% else %}
+                <p style="margin: 0; color: #555; line-height: 1.7; font-size: 1rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">{{ post.content|truncatewords:30 }}</p>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+</article>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 为所有文章卡片添加点击事件
+    document.querySelectorAll('.post-card').forEach(function(card) {
+        card.addEventListener('click', function(e) {
+            // 如果点击的是按钮或链接，不触发卡片跳转
+            if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A' || e.target.closest('button') || e.target.closest('a')) {
+                return;
+            }
+            
+            // 跳转到文章详情页
+            const postUrl = this.getAttribute('data-post-url');
+            if (postUrl) {
+                window.location.href = postUrl;
+            }
+        });
+    });
+});
+</script>

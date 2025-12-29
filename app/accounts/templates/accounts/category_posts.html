@@ -1,0 +1,181 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+    {% if is_own_page %}
+        {% if category %}{{ category.name }} - 文章管理{% else %}未分类文章{% endif %} - Meow Blog
+    {% else %}
+        {% if category %}{{ target_user.username }} 的 {{ category.name }}{% else %}{{ target_user.username }} 的未分类文章{% endif %} - Meow Blog
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="fade-in-up page-container">
+        <div class="page-header">
+            <div class="page-header-content">
+                <div class="page-header-title">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="font-size: 2.5rem;">
+                            {% if category %}
+                                📂
+                            {% else %}
+                                📄
+                            {% endif %}
+                        </div>
+                        <div>
+                            <h1 class="page-title" style="margin: 0;">
+                                {% if is_own_page %}
+                                    {% if category %}
+                                        {{ category.name }} - 文章管理
+                                    {% else %}
+                                        未分类文章
+                                    {% endif %}
+                                {% else %}
+                                    {% if category %}
+                                        {{ target_user.username }} 的 {{ category.name }}
+                                    {% else %}
+                                        {{ target_user.username }} 的未分类文章
+                                    {% endif %}
+                                {% endif %}
+                            </h1>
+                            <p style="color: #6c757d; font-size: 1.1rem; margin: 0;">
+                                {% if is_own_page %}
+                                    {% if category %}
+                                        管理「{{ category.name }}」分类下的文章
+                                    {% else %}
+                                        管理没有指定分类的文章
+                                    {% endif %}
+                                {% else %}
+                                    {% if category %}
+                                        查看「{{ category.name }}」分类下的文章
+                                    {% else %}
+                                        查看没有指定分类的文章
+                                    {% endif %}
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="page-header-actions">
+                    {% if is_own_page %}
+                        <a href="{% url 'accounts:manuscript_management' %}" class="btn-back">← 返回稿件管理</a>
+                    {% else %}
+                        <a href="{% url 'accounts:user_manuscript_management' user_id=target_user.id %}" class="btn-back">← 返回稿件管理</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        {# 显示消息 - 由全局JavaScript系统处理 #}
+        {% if messages %}
+            <div style="display: none;">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {# 操作按钮 - 只在查看自己的页面时显示 #}
+        {% if is_own_page %}
+        <div class="card" style="margin-bottom: 2rem; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                {% if category %}
+                    <a href="{% url 'accounts:create_post' category_id=category.id %}" class="btn btn-primary">✏️ 在此分类下新建文章</a>
+                    <a href="{% url 'accounts:edit_category' category_id=category.id %}" class="btn btn-warning">✏️ 编辑分类</a>
+                {% else %}
+                    <a href="{% url 'accounts:create_post' %}" class="btn btn-primary">✏️ 新建文章</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <main>
+            {% if posts %}
+                <div style="display: flex; flex-direction: column; gap: 0.1rem;">
+                    {% for post in posts %}
+                        {% include 'blog/includes/post_card.html' with post=post card_style='list' show_actions=is_own_page show_author_link=True show_visibility=True show_stats=True show_content_preview=True %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card" style="text-align: center; padding: 4rem; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+                    <div style="font-size: 5rem; margin-bottom: 2rem; opacity: 0.6;">
+                        {% if category %}
+                            📂
+                        {% else %}
+                            📄
+                        {% endif %}
+                    </div>
+                    <h3 class="subsection-title" style="color: #6c757d; text-align: center;">
+                        {% if category %}
+                            此分类下还没有文章
+                        {% else %}
+                            没有未分类的文章
+                        {% endif %}
+                    </h3>
+                    <p style="color: #6c757d; margin-bottom: 2rem; font-size: 1.1rem;">
+                        {% if category %}
+                            在「{{ category.name }}」分类下创建你的第一篇文章吧！
+                        {% else %}
+                            所有文章都已经分类整理好了！
+                        {% endif %}
+                    </p>
+                    {% if category %}
+                        <a href="{% url 'accounts:create_post' category_id=category.id %}" class="btn btn-primary" style="padding: 0.75rem 2rem;">创建第一篇文章</a>
+                    {% else %}
+                        <a href="{% url 'accounts:create_post' %}" class="btn btn-primary" style="padding: 0.75rem 2rem;">创建新文章</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+            
+            {# 分页 #}
+            {% if posts.has_other_pages %}
+                <div style="display: flex; justify-content: center; margin-top: 3rem;">
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        {% if posts.has_previous %}
+                            {% if category %}
+                                <a href="?page={{ posts.previous_page_number }}" class="btn btn-secondary" style="padding: 0.75rem 1.5rem;">上一页</a>
+                            {% else %}
+                                <a href="{% url 'accounts:category_posts' category_id=0 %}?page={{ posts.previous_page_number }}" class="btn btn-secondary" style="padding: 0.75rem 1.5rem;">上一页</a>
+                            {% endif %}
+                        {% endif %}
+                        
+                        <span style="padding: 0.75rem 1.5rem; background-color: #e9ecef; border-radius: 0.5rem; color: #495057; font-weight: 500;">
+                            第 {{ posts.number }} 页，共 {{ posts.paginator.num_pages }} 页
+                        </span>
+                        
+                        {% if posts.has_next %}
+                            {% if category %}
+                                <a href="?page={{ posts.next_page_number }}" class="btn btn-secondary" style="padding: 0.75rem 1.5rem;">下一页</a>
+                            {% else %}
+                                <a href="{% url 'accounts:category_posts' category_id=0 %}?page={{ posts.next_page_number }}" class="btn btn-secondary" style="padding: 0.75rem 1.5rem;">下一页</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </main>
+    </div>
+    
+    <style>
+        @media (max-width: 768px) {
+            .page-header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .page-header-actions {
+                align-self: flex-end;
+            }
+            
+            .card {
+                padding: 1.5rem !important;
+            }
+            
+            article .card {
+                padding: 1rem !important;
+            }
+        }
+    </style>
+{% endblock %}

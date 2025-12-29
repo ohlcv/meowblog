@@ -1,0 +1,366 @@
+{% extends 'core/base.html' %}
+
+{% block title %}用户管理 - Meow Blog{% endblock %}
+
+{% block content %}
+    {% csrf_token %}
+    <div class="fade-in-up" style="max-width: 1200px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+            <h1 style="margin: 0; color: #dc3545; font-size: 2.5rem; font-weight: 300;">👥 用户管理</h1>
+            <a href="{% url 'accounts:admin_panel' %}" class="btn-back">← 返回管理面板</a>
+        </div>
+        
+        {# 显示消息 - 由全局JavaScript系统处理 #}
+        {% if messages %}
+            <div style="display: none;">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {# 用户列表 #}
+        {% if users %}
+            <div class="card">
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-bottom: 2px solid #dee2e6;">
+                                <th style="padding: 1rem; text-align: left; font-weight: 600; color: #2c3e50;">用户名</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600; color: #2c3e50;">邮箱</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600; color: #2c3e50;">类型</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600; color: #2c3e50;">状态</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600; color: #2c3e50;">注册时间</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600; color: #2c3e50;">最后登录</th>
+                                <th style="padding: 1rem; text-align: center; font-weight: 600; color: #2c3e50;">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                                <tr style="border-bottom: 1px solid #e9ecef; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#f8f9fa'" onmouseout="this.style.backgroundColor='white'">
+                                    <td style="padding: 1rem; font-weight: 500; color: #2c3e50;">
+                                        {{ user.username }}
+                                        {% if user.first_name or user.last_name %}
+                                            <div style="font-size: 0.8rem; color: #6c757d; font-weight: normal;">
+                                                {{ user.first_name }} {{ user.last_name }}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td style="padding: 1rem; color: #495057;">
+                                        {{ user.email|default:"未设置" }}
+                                    </td>
+                                    <td style="padding: 1rem;">
+                                        {% if user.is_superuser %}
+                                            <span style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.8rem; font-weight: 600;">🔨 超级管理员</span>
+                                        {% elif user.is_staff %}
+                                            <span style="background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%); color: #212529; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.8rem; font-weight: 600;">⚙️ 员工</span>
+                                        {% else %}
+                                            <span style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.8rem; font-weight: 600;">👤 普通用户</span>
+                                        {% endif %}
+                                    </td>
+                                    <td style="padding: 1rem;">
+                                        {% if user.profile.is_currently_banned %}
+                                            <span style="background: #dc3545; color: white; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.8rem; font-weight: 600;">🚫 已封禁</span>
+                                            {% if user.profile.ban_until %}
+                                                <div style="font-size: 0.7rem; color: #dc3545; margin-top: 0.25rem;">至{{ user.profile.ban_until|date:"m月d日 H:i" }}</div>
+                                            {% endif %}
+                                        {% elif user.profile.is_currently_muted %}
+                                            <span style="background: #ffc107; color: #212529; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.8rem; font-weight: 600;">🔇 已禁言</span>
+                                            {% if user.profile.mute_until %}
+                                                <div style="font-size: 0.7rem; color: #ffc107; margin-top: 0.25rem;">至{{ user.profile.mute_until|date:"m月d日 H:i" }}</div>
+                                            {% endif %}
+                                        {% else %}
+                                            <span style="background: #28a745; color: white; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.8rem; font-weight: 600;">✅ 正常</span>
+                                        {% endif %}
+                                    </td>
+                                    <td style="padding: 1rem; color: #495057; font-size: 0.9rem;">
+                                        {{ user.date_joined|date:"Y年m月d日" }}
+                                    </td>
+                                    <td style="padding: 1rem; color: #495057; font-size: 0.9rem;">
+                                        {% if user.last_login %}
+                                            {{ user.last_login|date:"Y年m月d日" }}
+                                        {% else %}
+                                            从未登录
+                                        {% endif %}
+                                    </td>
+                                    <td style="padding: 1rem; text-align: center;">
+                                        {% if not user.is_superuser and user != request.user %}
+                                            <div style="display: flex; gap: 0.5rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+                                                {% if user.profile.is_currently_banned %}
+                                                    <button class="btn btn-primary user-action-btn" 
+                                                            style="padding: 0.4rem 0.8rem; font-size: 0.8rem;"
+                                                            data-user-id="{{ user.id }}"
+                                                            data-username="{{ user.username }}"
+                                                            data-action="unban">
+                                                        ✅ 解除封禁
+                                                    </button>
+                                                {% elif user.profile.is_currently_muted %}
+                                                    <button class="btn btn-primary user-action-btn" 
+                                                            style="padding: 0.4rem 0.8rem; font-size: 0.8rem;"
+                                                            data-user-id="{{ user.id }}"
+                                                            data-username="{{ user.username }}"
+                                                            data-action="unmute">
+                                                        ✅ 解除禁言
+                                                    </button>
+                                                    <button class="btn btn-danger user-action-btn" 
+                                                            style="padding: 0.4rem 0.8rem; font-size: 0.8rem;"
+                                                            data-user-id="{{ user.id }}"
+                                                            data-username="{{ user.username }}"
+                                                            data-action="ban">
+                                                        🚫 封禁
+                                                    </button>
+                                                {% else %}
+                                                    <button class="btn btn-warning user-action-btn" 
+                                                            style="padding: 0.4rem 0.8rem; font-size: 0.8rem;"
+                                                            data-user-id="{{ user.id }}"
+                                                            data-username="{{ user.username }}"
+                                                            data-action="mute">
+                                                        🔇 禁言
+                                                    </button>
+                                                    <button class="btn btn-danger user-action-btn" 
+                                                            style="padding: 0.4rem 0.8rem; font-size: 0.8rem;"
+                                                            data-user-id="{{ user.id }}"
+                                                            data-username="{{ user.username }}"
+                                                            data-action="ban">
+                                                        🚫 封禁
+                                                    </button>
+                                                {% endif %}
+                                                <a href="{% url 'accounts:admin_delete_user' user_id=user.id %}" 
+                                                   class="btn btn-danger" 
+                                                   style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+                                                    🗑️ 删除
+                                                </a>
+                                            </div>
+                                        {% else %}
+                                            <span style="color: #6c757d; font-size: 0.8rem;">无法操作</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            {# 分页 #}
+            {% if users.has_other_pages %}
+                <div style="display: flex; justify-content: center; margin-top: 3rem;">
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        {% if users.has_previous %}
+                            <a href="?page={{ users.previous_page_number }}" class="btn btn-secondary" style="padding: 0.75rem 1.5rem;">上一页</a>
+                        {% endif %}
+                        
+                        <span style="padding: 0.75rem 1.5rem; background-color: #e9ecef; border-radius: 0.5rem; color: #495057; font-weight: 500;">
+                            第 {{ users.number }} 页，共 {{ users.paginator.num_pages }} 页
+                        </span>
+                        
+                        {% if users.has_next %}
+                            <a href="?page={{ users.next_page_number }}" class="btn btn-secondary" style="padding: 0.75rem 1.5rem;">下一页</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="card" style="text-align: center; padding: 4rem;">
+                <div style="font-size: 4rem; margin-bottom: 2rem; opacity: 0.6;">👥</div>
+                <h3 style="color: #6c757d; margin-bottom: 1rem;">暂无用户</h3>
+                <p style="color: #6c757d; margin: 0;">系统中还没有任何用户。</p>
+            </div>
+        {% endif %}
+    </div>
+    
+    <style>
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem !important;
+            }
+            
+            .card {
+                padding: 1rem !important;
+            }
+            
+            table {
+                font-size: 0.8rem;
+            }
+            
+            th, td {
+                padding: 0.5rem !important;
+            }
+        }
+    </style>
+    
+    <!-- 用户操作模态框 -->
+    <div id="userActionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 2rem; border-radius: 0.5rem; max-width: 500px; width: 90%;">
+            <h3 id="modalTitle" style="margin-bottom: 1.5rem; color: #2c3e50;"></h3>
+            <div id="modalContent"></div>
+            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: flex-end;">
+                <button id="cancelBtn" class="btn btn-secondary">取消</button>
+                <button id="confirmBtn" class="btn btn-danger">确认</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 用户管理功能模块
+        const UserManagement = {
+            // 初始化
+            init: function() {
+                this.bindEvents();
+            },
+            
+            // 绑定事件
+            bindEvents: function() {
+                // 绑定所有用户操作按钮
+                const actionButtons = document.querySelectorAll('.user-action-btn');
+                actionButtons.forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const userId = e.target.getAttribute('data-user-id');
+                        const username = e.target.getAttribute('data-username');
+                        const action = e.target.getAttribute('data-action');
+                        
+                        this.showActionModal(action, userId, username);
+                    });
+                });
+                
+                // 模态框事件
+                document.getElementById('cancelBtn').addEventListener('click', this.hideModal);
+                document.getElementById('userActionModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'userActionModal') {
+                        this.hideModal();
+                    }
+                });
+            },
+            
+            // 显示操作模态框
+            showActionModal: function(action, userId, username) {
+                const modal = document.getElementById('userActionModal');
+                const title = document.getElementById('modalTitle');
+                const content = document.getElementById('modalContent');
+                const confirmBtn = document.getElementById('confirmBtn');
+                
+                let titleText, contentHTML, confirmText, confirmClass;
+                
+                switch(action) {
+                    case 'mute':
+                        titleText = `禁言用户: ${username}`;
+                        contentHTML = `
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">禁言时长（小时）：</label>
+                                <input type="number" id="duration" placeholder="留空为永久禁言" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 0.25rem;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">禁言原因：</label>
+                                <textarea id="reason" placeholder="请输入禁言原因..." style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 0.25rem; resize: vertical;" rows="3"></textarea>
+                            </div>
+                        `;
+                        confirmText = '确认禁言';
+                        confirmClass = 'btn-warning';
+                        break;
+                    case 'ban':
+                        titleText = `封禁用户: ${username}`;
+                        contentHTML = `
+                            <div style="margin-bottom: 1rem;">
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">封禁时长（天）：</label>
+                                <input type="number" id="duration" placeholder="留空为永久封禁" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 0.25rem;">
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">封禁原因：</label>
+                                <textarea id="reason" placeholder="请输入封禁原因..." style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 0.25rem; resize: vertical;" rows="3"></textarea>
+                            </div>
+                        `;
+                        confirmText = '确认封禁';
+                        confirmClass = 'btn-danger';
+                        break;
+                    case 'unmute':
+                        titleText = `解除禁言: ${username}`;
+                        contentHTML = `<p>确定要解除用户 <strong>${username}</strong> 的禁言吗？</p>`;
+                        confirmText = '确认解除';
+                        confirmClass = 'btn-primary';
+                        break;
+                    case 'unban':
+                        titleText = `解除封禁: ${username}`;
+                        contentHTML = `<p>确定要解除用户 <strong>${username}</strong> 的封禁吗？</p>`;
+                        confirmText = '确认解除';
+                        confirmClass = 'btn-primary';
+                        break;
+                }
+                
+                title.textContent = titleText;
+                content.innerHTML = contentHTML;
+                confirmBtn.textContent = confirmText;
+                confirmBtn.className = `btn ${confirmClass}`;
+                
+                // 绑定确认按钮事件
+                confirmBtn.onclick = () => this.executeAction(action, userId, username);
+                
+                modal.style.display = 'flex';
+            },
+            
+            // 隐藏模态框
+            hideModal: function() {
+                document.getElementById('userActionModal').style.display = 'none';
+            },
+            
+            // 执行操作
+            executeAction: function(action, userId, username) {
+                let url, data = new FormData();
+                
+                // 添勊CRSF token
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || 
+                                 document.querySelector('meta[name=csrf-token]')?.getAttribute('content');
+                if (csrfToken) {
+                    data.append('csrfmiddlewaretoken', csrfToken);
+                }
+                
+                switch(action) {
+                    case 'mute':
+                        url = `/accounts/admin/user/mute/${userId}/`;
+                        const muteDuration = document.getElementById('duration')?.value;
+                        const muteReason = document.getElementById('reason')?.value;
+                        if (muteDuration) data.append('duration_hours', muteDuration);
+                        if (muteReason) data.append('reason', muteReason);
+                        break;
+                    case 'ban':
+                        url = `/accounts/admin/user/ban/${userId}/`;
+                        const banDuration = document.getElementById('duration')?.value;
+                        const banReason = document.getElementById('reason')?.value;
+                        if (banDuration) data.append('duration_days', banDuration);
+                        if (banReason) data.append('reason', banReason);
+                        break;
+                    case 'unmute':
+                        url = `/accounts/admin/user/unmute/${userId}/`;
+                        break;
+                    case 'unban':
+                        url = `/accounts/admin/user/unban/${userId}/`;
+                        break;
+                }
+                
+                fetch(url, {
+                    method: 'POST',
+                    body: data
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        this.hideModal();
+                        location.reload(); // 刷新页面显示更新后的状态
+                    } else {
+                        alert('操作失败：' + result.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('操作失败，请稍后再试。');
+                });
+            }
+        };
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            UserManagement.init();
+        });
+    </script>
+{% endblock %}

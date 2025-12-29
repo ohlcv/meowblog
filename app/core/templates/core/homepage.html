@@ -1,0 +1,65 @@
+{% extends 'core/base.html' %}
+
+{% block title %}首页 - Meow Blog{% endblock %}
+
+{% block content %}
+    <div class="fade-in-up page-container">
+        <!-- 英雄区域 -->
+        <div class="hero-section">
+            <div class="hero-icon">🐱</div>
+            <h1 class="hero-title">Meow Blog</h1>
+            <p class="hero-subtitle">
+                一个温馨的小站，分享知识、记录生活、连接世界。<br>
+                在这里，每一个想法都值得被记录，每一份美好都值得被分享。
+            </p>
+            
+            <div class="hero-actions">
+                <a href="{% url 'blog:post_list' %}" class="btn btn-primary hero-button">
+                    📆 探索博客
+                </a>
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'accounts:signup' %}" class="btn btn-primary hero-button">
+                        🌱 加入我们
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- 特色功能 -->
+        <div class="feature-grid">
+            <a href="{% url 'blog:post_list' %}" class="card feature-card">
+                <div class="feature-icon">📝</div>
+                <h3 class="feature-title">个人博客</h3>
+                <p class="feature-description">
+                    分享你的想法和经历，记录生活的美好瞬间，让知识传承下去。
+                    支持 Markdown 语法，让你的文字更加优雅。
+                </p>
+            </a>
+            
+            <a href="{% url 'accounts:manuscript_management' %}" class="card feature-card">
+                <div class="feature-icon">📁</div>
+                <h3 class="feature-title">分类管理</h3>
+                <p class="feature-description">
+                    智能分类系统，让你的文章有序整理，方便读者快速找到感兴趣的内容。
+                    支持自定义分类和标签。
+                </p>
+            </a>
+            
+            <a href="{% url 'about' %}" class="card feature-card">
+                <div class="feature-icon">🌱</div>
+                <h3 class="feature-title">简洁优雅</h3>
+                <p class="feature-description">
+                    现代化的界面设计，流畅的使用体验，让你专注于内容创作而非技术细节。
+                    响应式设计，完美适配各种设备。
+                </p>
+            </a>
+        </div>
+        
+        <!-- 页面底部 -->
+        <div class="page-footer">
+            <p class="page-footer-text">
+                ❤️ 为每一个创造者提供温馨的家。
+            </p>
+        </div>
+    </div>
+{% endblock %}

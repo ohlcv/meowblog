@@ -1,0 +1,53 @@
+{% extends 'core/base.html' %}
+
+{% block title %}编辑分类 - Meow Blog{% endblock %}
+
+{% block content %}
+    <div class="page-container">
+        <div class="page-header">
+            <div class="page-header-content">
+                <div class="page-header-title">
+                    <h1 class="page-title">📝 编辑分类</h1>
+                </div>
+                <div class="page-header-actions">
+                    <a href="{% url 'accounts:manuscript_management' %}" class="btn-back">← 返回稿件管理</a>
+                </div>
+            </div>
+        </div>
+        
+        {# 显示消息 - 由全局JavaScript系统处理 #}
+        {% if messages %}
+            <div style="display: none;">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="edit-category-card">
+            <div class="edit-category-header">
+                <div class="edit-category-icon">📁</div>
+                <div class="edit-category-info">
+                    <h2 class="edit-category-title">编辑分类信息</h2>
+                    <p class="edit-category-subtitle">修改分类名称和相关信息</p>
+                </div>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                {% include 'components/input_field.html' with field=form.name label="文章分类名称" required=True %}
+                <small class="form-help">
+                    当前分类下有 <strong>{{ category.post_set.count }}</strong> 篇文章
+                </small>
+                
+                <div class="btn-group-flex">
+                    <button type="submit" class="btn btn-primary">💾 保存修改</button>
+                    <a href="{% url 'accounts:manuscript_management' %}" class="btn btn-secondary">↩️ 取消编辑</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

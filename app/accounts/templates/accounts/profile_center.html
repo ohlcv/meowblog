@@ -1,0 +1,144 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+    {% if is_own_page %}
+        个人中心 - Meow Blog
+    {% else %}
+        {{ target_user.username }} 的个人中心 - Meow Blog
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="fade-in-up page-container">
+        <div class="page-header">
+            <div class="page-header-content">
+                <div class="page-header-title">
+                    <h1 class="page-title">
+                        {% if is_own_page %}
+                            🐱 个人中心
+                        {% else %}
+                            👤 {{ target_user.username }} 的个人中心
+                        {% endif %}
+                    </h1>
+                </div>
+                {% if not is_own_page %}
+                    <div class="page-header-actions">
+                        <a href="{% url 'blog:post_list' %}" class="btn-back">← 返回文章列表</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        {# 显示消息 - 由全局JavaScript系统处理 #}
+        {% if messages %}
+            <div style="display: none;">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+
+        {# 快速操作区域 - 纵向布局 #}
+        <div class="page-content">
+            <div class="vertical-layout">
+                {# 管理员功能区域 - 只在管理员查看自己的个人中心时显示 #}
+                {% if is_own_page and user.is_superuser %}
+                    <div class="card action-card admin-card" data-url="{% url 'accounts:admin_panel' %}">
+                        <div class="card-header">
+                            <div class="card-icon">🔨</div>
+                            <div class="card-title-section">
+                                <h3 class="card-title">管理员面板</h3>
+                                <p class="card-description">系统管理功能，用户管理、内容审核、系统设置</p>
+                            </div>
+                        </div>
+                        <div class="btn btn-danger">进入管理</div>
+                    </div>
+                {% endif %}
+                
+                {# 稿件管理部分 #}
+                <div class="card action-card" data-url="{% if is_own_page %}{% url 'accounts:manuscript_management' %}{% else %}{% url 'accounts:user_manuscript_management' user_id=target_user.id %}{% endif %}">
+                    <div class="card-header">
+                        <div class="card-icon">📝</div>
+                        <div class="card-title-section">
+                            <h3 class="card-title">稿件管理</h3>
+                            <p class="card-description">
+                                {% if is_own_page %}
+                                    管理文章分类和文章内容，组织你的创作内容
+                                {% else %}
+                                    查看 {{ target_user.username }} 的文章分类和创作内容
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="btn btn-primary">进入管理</div>
+                </div>
+                
+                {# 账户设置部分 - 只有自己可以访问 #}
+                {% if is_own_page %}
+                    <div class="card action-card" data-url="{% url 'accounts:user_settings' %}">
+                        <div class="card-header">
+                            <div class="card-icon">⚙️</div>
+                            <div class="card-title-section">
+                                <h3 class="card-title">账户设置</h3>
+                                <p class="card-description">修改密码和个人信息，个性化设置</p>
+                            </div>
+                        </div>
+                        <div class="btn btn-primary">进入设置</div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .stat-item {
+            transition: all 0.3s ease;
+        }
+        
+        .stat-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .action-card[data-url*="user_settings"]:hover {
+            box-shadow: 0 10px 30px rgba(251, 114, 153, 0.3);
+        }
+        
+        .action-card[data-url*="admin_panel"]:hover {
+            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.4);
+            transform: translateY(-8px);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem !important;
+            }
+            
+            .card {
+                padding: 1.5rem !important;
+            }
+        }
+    </style>
+    
+    <script>
+        // 为操作卡片添加点击事件
+        document.addEventListener('DOMContentLoaded', function() {
+            const actionCards = document.querySelectorAll('.action-card');
+            actionCards.forEach(function(card) {
+                card.addEventListener('click', function() {
+                    const url = this.getAttribute('data-url');
+                    if (url) {
+                        window.location.href = url;
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

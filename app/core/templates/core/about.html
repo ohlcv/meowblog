@@ -1,0 +1,490 @@
+{% extends 'core/base.html' %}
+
+{% block title %}关于我 - Meow Blog{% endblock %}
+
+{% block content %}
+    <div class="fade-in-up" style="padding: 4rem 0;">
+        <div class="container">
+            <!-- 页面标题 -->
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <div style="font-size: 6rem; margin-bottom: 2rem; line-height: 1;">👨‍💻</div>
+                <h1 style="margin: 0 0 1.5rem 0; color: #2c3e50; font-size: 3.5rem; font-weight: 300; background: linear-gradient(135deg, #fb7299 0%, #ff8fb3 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                    关于我
+                </h1>
+                <p style="margin: 0; color: #6c757d; font-size: 1.2rem; line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    欢迎来到 Meow Blog！让我来介绍一下自己
+                </p>
+            </div>
+
+            <!-- 主要内容 -->
+            <div style="max-width: 800px; margin: 0 auto;">
+                <!-- 个人介绍 -->
+                <div class="card" style="margin-bottom: 3rem; padding: 3rem;">
+                    <h2 style="color: #2c3e50; margin-bottom: 2rem; font-size: 2rem; font-weight: 600; text-align: center;">
+                        🐱 个人简介
+                    </h2>
+                    <div style="color: #555; line-height: 1.8; font-size: 1.1rem;">
+                        <p style="margin-bottom: 1.5rem;">
+                            欢迎来到 <strong>Meow Blog</strong>！我是一名专注于量化交易和Web开发的工程师，热爱用技术解决问题。
+                        </p>
+                        <p style="margin-bottom: 0;">
+                            在这里，我会分享量化交易、Web开发、技术心得，成长感悟等内容。希望我的分享能对同样热爱技术和生活的朋友有所帮助！
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 技能与兴趣 -->
+                <div class="card" style="margin-bottom: 3rem; padding: 3rem;">
+                    <h2 style="color: #2c3e50; margin-bottom: 2rem; font-size: 2rem; font-weight: 600; text-align: center;">
+                        🛠️ 技能与兴趣
+                    </h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, rgba(251, 114, 153, 0.08) 0%, rgba(251, 114, 153, 0.12) 100%); border-radius: 1rem; border-left: 4px solid #fb7299;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">📈</div>
+                            <h3 style="color: #fb7299; margin-bottom: 1rem; font-size: 1.3rem; font-weight: 600;">量化交易</h3>
+                            <p style="color: #6c757d; margin: 0; line-height: 1.6;">
+                                高频做市商、多层风险管理、精细化订单仓位管理、市场轮动筛选机制、超参数优化数据统计、机器学习概率择时
+                            </p>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, rgba(251, 114, 153, 0.08) 0%, rgba(251, 114, 153, 0.12) 100%); border-radius: 1rem; border-left: 4px solid #fb7299;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🐍</div>
+                            <h3 style="color: #fb7299; margin-bottom: 1rem; font-size: 1.3rem; font-weight: 600;">Python 开发</h3>
+                            <p style="color: #6c757d; margin: 0; line-height: 1.6;">
+                                事件驱动架构、面向对象编程、SOLID原则、机器学习模型训练
+                            </p>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, rgba(251, 114, 153, 0.08) 0%, rgba(251, 114, 153, 0.12) 100%); border-radius: 1rem; border-left: 4px solid #fb7299;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">🌐</div>
+                            <h3 style="color: #fb7299; margin-bottom: 1rem; font-size: 1.3rem; font-weight: 600;">Web 开发</h3>
+                            <p style="color: #6c757d; margin: 0; line-height: 1.6;">
+                                MVT架构、响应式设计、MySQL、Linux、HTML、JavaScript、Vue、Docker、Golang
+                            </p>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, rgba(251, 114, 153, 0.08) 0%, rgba(251, 114, 153, 0.12) 100%); border-radius: 1rem; border-left: 4px solid #fb7299;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
+                            <h3 style="color: #fb7299; margin-bottom: 1rem; font-size: 1.3rem; font-weight: 600;">数据分析</h3>
+                            <p style="color: #6c757d; margin: 0; line-height: 1.6;">
+                                Pandas、TA-Lib、Numpy、XGBoost，PyTorch
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- 技术能力展示 -->
+                <div class="card" style="padding: 3rem;">
+                    <h2 style="color: #2c3e50; margin-bottom: 2rem; font-size: 2rem; font-weight: 600; text-align: center;">
+                        🚀 高完成度项目
+                    </h2>
+                    
+                    <!-- AgileGrid项目 -->
+                    <div style="margin-bottom: 2.5rem; padding: 2rem; background: linear-gradient(135deg, rgba(251, 114, 153, 0.08) 0%, rgba(251, 114, 153, 0.12) 100%); border-radius: 1rem; border-left: 4px solid #fb7299;">
+                        <h3 style="margin-bottom: 1rem; font-size: 1.5rem; font-weight: 600; color: #fb7299;">📈 AgileGrid交易系统</h3>
+                        <p style="margin-bottom: 1.5rem; color: #555; font-size: 1.1rem;">
+                            基于Freqtrade框架的高级量化交易系统，采用事件驱动架构和多层级网格交易，专为高波动性的加密货币市场设计。
+                        </p>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                            <div style="background: white; padding: 1.5rem; border-radius: 0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <h4 style="margin-bottom: 0.8rem; font-size: 1.1rem; font-weight: 600; color: #2c3e50;">🏗️ 系统架构设计</h4>
+                                <p style="margin: 0; font-size: 0.9rem; color: #666; line-height: 1.5;">
+                                    事件驱动架构 + 模块化设计，实现高度解耦和可扩展性。采用状态机模式管理交易流程，确保系统稳定性和可维护性。
+                                </p>
+                            </div>
+                            
+                            <div style="background: white; padding: 1.5rem; border-radius: 0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <h4 style="margin-bottom: 0.8rem; font-size: 1.1rem; font-weight: 600; color: #2c3e50;">🧠 算法策略开发</h4>
+                                <p style="margin: 0; font-size: 0.9rem; color: #666; line-height: 1.5;">
+                                    多指标择时算法，结合经典技术指标超参数优化，实现智能开仓时机判断。多时间框架分析，提高信号准确性。
+                                </p>
+                            </div>
+                            
+                            <div style="background: white; padding: 1.5rem; border-radius: 0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <h4 style="margin-bottom: 0.8rem; font-size: 1.1rem; font-weight: 600; color: #2c3e50;">⚡ 性能优化</h4>
+                                <p style="margin: 0; font-size: 0.9rem; color: #666; line-height: 1.5;">
+                                    智能回调机制避免极端价格建仓，全局风险控制系统保护资金安全。配置热更新支持实时策略调整。
+                                </p>
+                            </div>
+                            
+                            <div style="background: white; padding: 1.5rem; border-radius: 0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <h4 style="margin-bottom: 0.8rem; font-size: 1.1rem; font-weight: 600; color: #2c3e50;">🛠️ 工程化实践</h4>
+                                <p style="margin: 0; font-size: 0.9rem; color: #666; line-height: 1.5;">
+                                    完整的日志系统、CSV调试导出、HTTP API管理界面。支持多币种并行交易，资金利用率提升至85%+。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <p style="margin: 0; font-size: 0.9rem; color: #666;">
+                                <strong>技术栈：</strong>Python + Freqtrade + TA-Lib + 事件驱动架构 + 状态机模式 + HTTP API
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Meow Site项目 -->
+                    <div style="margin-bottom: 2.5rem; padding: 2rem; background: linear-gradient(135deg, rgba(251, 114, 153, 0.08) 0%, rgba(251, 114, 153, 0.12) 100%); border-radius: 1rem; border-left: 4px solid #fb7299;">
+                        <h3 style="margin-bottom: 1rem; font-size: 1.5rem; font-weight: 600; color: #fb7299;">🐱 Meow Blog博客系统</h3>
+                        <p style="margin-bottom: 1.5rem; color: #555; font-size: 1.1rem;">
+                            功能完整的Django博客系统，展示现代Web开发的最佳实践和工程化能力。
+                        </p>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                            <div style="background: white; padding: 1.5rem; border-radius: 0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <h4 style="margin-bottom: 0.8rem; font-size: 1.1rem; font-weight: 600; color: #2c3e50;">🎨 前端技术</h4>
+                                <p style="margin: 0; font-size: 0.9rem; color: #666; line-height: 1.5;">
+                                    响应式设计 + 原生JavaScript + CSS3动画。实现Markdown实时预览、代码高亮、AJAX交互等现代前端功能。
+                                </p>
+                            </div>
+                            
+                            <div style="background: white; padding: 1.5rem; border-radius: 0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <h4 style="margin-bottom: 0.8rem; font-size: 1.1rem; font-weight: 600; color: #2c3e50;">🔧 后端架构</h4>
+                                <p style="margin: 0; font-size: 0.9rem; color: #666; line-height: 1.5;">
+                                    Django MVC架构 + 模块化设计 + 中间件系统。用户权限管理、内容审核、日志系统等企业级功能。
+                                </p>
+                            </div>
+                            
+                            <div style="background: white; padding: 1.5rem; border-radius: 0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <h4 style="margin-bottom: 0.8rem; font-size: 1.1rem; font-weight: 600; color: #2c3e50;">🛡️ 安全防护</h4>
+                                <p style="margin: 0; font-size: 0.9rem; color: #666; line-height: 1.5;">
+                                    CSRF保护 + XSS防护 + SQL注入防护 + 用户权限控制。完整的会话管理和密码安全机制。
+                                </p>
+                            </div>
+                            
+                            <div style="background: white; padding: 1.5rem; border-radius: 0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <h4 style="margin-bottom: 0.8rem; font-size: 1.1rem; font-weight: 600; color: #2c3e50;">📊 运维监控</h4>
+                                <p style="margin: 0; font-size: 0.9rem; color: #666; line-height: 1.5;">
+                                    分层日志系统 + 自动轮转 + 性能监控。支持开发/生产环境配置，完整的部署和监控方案。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div style="background: white; padding: 1rem; border-radius: 0.5rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <p style="margin: 0; font-size: 0.9rem; color: #666;">
+                                <strong>技术栈：</strong>Django 5.2.6 + Python 3.8+ + SQLite/PostgreSQL + HTML5/CSS3/JavaScript + Markdown + Pygments
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 开发中项目 -->
+                <div class="card" style="margin-bottom: 3rem; padding: 3rem;">
+                    <h2 style="color: #2c3e50; margin-bottom: 2rem; font-size: 2rem; font-weight: 600; text-align: center;">
+                        🔨 开发中项目
+                    </h2>
+                    
+                    <!-- Chan.py缠论框架项目 -->
+                    <div style="padding: 2rem; background: linear-gradient(135deg, rgba(251, 114, 153, 0.08) 0%, rgba(251, 114, 153, 0.12) 100%); border-radius: 1rem; border-left: 4px solid #fb7299;">
+                        <h3 style="margin-bottom: 1rem; font-size: 1.5rem; font-weight: 600; color: #fb7299;">📊 缠论机器学习量化框架</h3>
+                        <p style="margin-bottom: 1.5rem; color: #555; font-size: 1.1rem;">
+                            基于缠论理论的高级量化分析框架，集成机器学习模型和自动化交易系统，支持多级别联立计算和区间套分析。
+                        </p>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                            <div style="background: rgba(255,255,255,0.8); padding: 1.5rem; border-radius: 0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <h4 style="margin-bottom: 0.8rem; font-size: 1.1rem; font-weight: 600; color: #2c3e50;">🧮 缠论计算引擎</h4>
+                                <p style="margin: 0; font-size: 0.9rem; color: #666; line-height: 1.5;">
+                                    分形、笔、线段、中枢、买卖点全自动计算。支持多级别联立、区间套分析、背驰算法配置。
+                                </p>
+                            </div>
+                            
+                            <div style="background: rgba(255,255,255,0.8); padding: 1.5rem; border-radius: 0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <h4 style="margin-bottom: 0.8rem; font-size: 1.1rem; font-weight: 600; color: #2c3e50;">🤖 机器学习集成</h4>
+                                <p style="margin: 0; font-size: 0.9rem; color: #666; line-height: 1.5;">
+                                    预计开发500+特征工程、XGBoost/LightGBM/MLP模型、AutoML超参优化、特征一致性校验。
+                                </p>
+                            </div>
+                            
+                            <div style="background: rgba(255,255,255,0.8); padding: 1.5rem; border-radius: 0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <h4 style="margin-bottom: 0.8rem; font-size: 1.1rem; font-weight: 600; color: #2c3e50;">📈 交易系统</h4>
+                                <p style="margin: 0; font-size: 0.9rem; color: #666; line-height: 1.5;">
+                                    富途API对接、模拟盘/实盘切换、实时数据接入、风险控制、回测评估框架。
+                                </p>
+                            </div>
+                            
+                            <div style="background: rgba(255,255,255,0.8); padding: 1.5rem; border-radius: 0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <h4 style="margin-bottom: 0.8rem; font-size: 1.1rem; font-weight: 600; color: #2c3e50;">🎨 可视化分析</h4>
+                                <p style="margin: 0; font-size: 0.9rem; color: #666; line-height: 1.5;">
+                                    TradingView绘图引擎、实时数据接入图表绘制、自定义画图元素、。
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(255,255,255,0.9); padding: 1rem; border-radius: 0.5rem; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <p style="margin: 0; font-size: 0.9rem; color: #666;">
+                                <strong>技术栈：</strong>Python 3.11 + 缠论算法 + XGBoost/LightGBM + 富途API + Matplotlib + AutoML
+                            </p>
+                            <p style="margin: 0.5rem 0 0 0; font-size: 0.8rem; color: #888;">
+                                <strong>项目规模：</strong>预计22000+行代码，1000+小时开发，支持A股/港股/美股全市场
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 联系方式 -->
+                <div class="card" style="padding: 3rem;">
+                    <h2 style="color: #2c3e50; margin-bottom: 2rem; font-size: 2rem; font-weight: 600; text-align: center;">
+                        📞 联系方式
+                    </h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #fb7299 0%, #ff8fb3 100%); color: white; border-radius: 1rem; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(251, 114, 153, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                            <div style="font-size: 2.5rem; margin-bottom: 1rem;">📧</div>
+                            <h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">邮箱</h3>
+                            <a href="mailto:24369961@qq.com" style="color: white; text-decoration: none; font-size: 0.9rem; opacity: 0.9;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.9'">24369961@qq.com</a>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #fb7299 0%, #ff8fb3 100%); color: white; border-radius: 1rem; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(251, 114, 153, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                            <div style="font-size: 2.5rem; margin-bottom: 1rem;">🐱</div>
+                            <h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">GitHub</h3>
+                            <a href="https://github.com/ohlcv" target="_blank" style="color: white; text-decoration: none; font-size: 0.9rem; opacity: 0.9;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.9'">@ohlcv</a>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #fb7299 0%, #ff8fb3 100%); color: white; border-radius: 1rem; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(251, 114, 153, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                            <div style="font-size: 2.5rem; margin-bottom: 1rem;">📺</div>
+                            <h3 style="margin-bottom: 0.5rem; font-size: 1.1rem;">哔哩哔哩</h3>
+                            <a href="https://b23.tv/wOztNSS" target="_blank" style="color: white; text-decoration: none; font-size: 0.9rem; opacity: 0.9;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.9'">量化交易喵</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        /* 手机版响应式设计 */
+        @media (max-width: 768px) {
+            .fade-in-up {
+                padding: 1.5rem 0 !important;
+            }
+            
+            .container {
+                padding: 0 0.75rem !important;
+            }
+            
+            /* 页面标题优化 */
+            h1 {
+                font-size: 2.2rem !important;
+                line-height: 1.2 !important;
+            }
+            
+            .fade-in-up > div:first-child > div:first-child > div:first-child {
+                font-size: 4rem !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            .fade-in-up > div:first-child > div:first-child > p {
+                font-size: 1rem !important;
+                padding: 0 0.5rem !important;
+            }
+            
+            /* 卡片优化 */
+            .card {
+                padding: 1.5rem !important;
+                margin-bottom: 2rem !important;
+            }
+            
+            /* 技能卡片网格优化 */
+            .card > div[style*="grid-template-columns"] {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            
+            /* 技能卡片内容优化 */
+            .card > div[style*="grid-template-columns"] > div {
+                padding: 1rem !important;
+            }
+            
+            .card > div[style*="grid-template-columns"] > div > div:first-child {
+                font-size: 2.5rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+            
+            .card > div[style*="grid-template-columns"] > div > h3 {
+                font-size: 1.1rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+            
+            .card > div[style*="grid-template-columns"] > div > p {
+                font-size: 0.9rem !important;
+                line-height: 1.5 !important;
+            }
+            
+            /* 项目卡片优化 */
+            .card > div[style*="background: linear-gradient"] {
+                padding: 1.5rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+            
+            .card > div[style*="background: linear-gradient"] > h3 {
+                font-size: 1.3rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+            
+            .card > div[style*="background: linear-gradient"] > p {
+                font-size: 1rem !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            /* 项目子卡片网格优化 */
+            .card > div[style*="background: linear-gradient"] > div[style*="grid-template-columns"] {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            
+            .card > div[style*="background: linear-gradient"] > div[style*="grid-template-columns"] > div {
+                padding: 1rem !important;
+            }
+            
+            .card > div[style*="background: linear-gradient"] > div[style*="grid-template-columns"] > div > h4 {
+                font-size: 1rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            .card > div[style*="background: linear-gradient"] > div[style*="grid-template-columns"] > div > p {
+                font-size: 0.85rem !important;
+                line-height: 1.4 !important;
+            }
+            
+            /* 技术栈卡片优化 */
+            .card > div[style*="background: linear-gradient"] > div[style*="background: white"] {
+                padding: 0.75rem !important;
+            }
+            
+            .card > div[style*="background: linear-gradient"] > div[style*="background: white"] > p {
+                font-size: 0.8rem !important;
+                line-height: 1.4 !important;
+            }
+            
+            /* 联系方式卡片优化 */
+            .card > div[style*="grid-template-columns"]:last-child {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            
+            .card > div[style*="grid-template-columns"]:last-child > div {
+                padding: 1.25rem !important;
+            }
+            
+            .card > div[style*="grid-template-columns"]:last-child > div > div:first-child {
+                font-size: 2rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+            
+            .card > div[style*="grid-template-columns"]:last-child > div > h3 {
+                font-size: 1rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            .card > div[style*="grid-template-columns"]:last-child > div > a {
+                font-size: 0.85rem !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .fade-in-up {
+                padding: 1rem 0 !important;
+            }
+            
+            .container {
+                padding: 0 0.5rem !important;
+            }
+            
+            /* 页面标题进一步优化 */
+            h1 {
+                font-size: 1.8rem !important;
+            }
+            
+            .fade-in-up > div:first-child > div:first-child > div:first-child {
+                font-size: 3.5rem !important;
+            }
+            
+            .fade-in-up > div:first-child > div:first-child > p {
+                font-size: 0.9rem !important;
+            }
+            
+            /* 卡片进一步优化 */
+            .card {
+                padding: 1rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+            
+            /* 技能卡片进一步优化 */
+            .card > div[style*="grid-template-columns"] > div {
+                padding: 0.75rem !important;
+            }
+            
+            .card > div[style*="grid-template-columns"] > div > div:first-child {
+                font-size: 2rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            .card > div[style*="grid-template-columns"] > div > h3 {
+                font-size: 1rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            .card > div[style*="grid-template-columns"] > div > p {
+                font-size: 0.8rem !important;
+            }
+            
+            /* 项目卡片进一步优化 */
+            .card > div[style*="background: linear-gradient"] {
+                padding: 1rem !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            .card > div[style*="background: linear-gradient"] > h3 {
+                font-size: 1.2rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            .card > div[style*="background: linear-gradient"] > p {
+                font-size: 0.9rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+            
+            .card > div[style*="background: linear-gradient"] > div[style*="grid-template-columns"] > div {
+                padding: 0.75rem !important;
+            }
+            
+            .card > div[style*="background: linear-gradient"] > div[style*="grid-template-columns"] > div > h4 {
+                font-size: 0.9rem !important;
+                margin-bottom: 0.4rem !important;
+            }
+            
+            .card > div[style*="background: linear-gradient"] > div[style*="grid-template-columns"] > div > p {
+                font-size: 0.8rem !important;
+            }
+            
+            /* 技术栈卡片进一步优化 */
+            .card > div[style*="background: linear-gradient"] > div[style*="background: white"] {
+                padding: 0.5rem !important;
+            }
+            
+            .card > div[style*="background: linear-gradient"] > div[style*="background: white"] > p {
+                font-size: 0.75rem !important;
+            }
+            
+            /* 联系方式卡片进一步优化 */
+            .card > div[style*="grid-template-columns"]:last-child > div {
+                padding: 1rem !important;
+            }
+            
+            .card > div[style*="grid-template-columns"]:last-child > div > div:first-child {
+                font-size: 1.8rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            .card > div[style*="grid-template-columns"]:last-child > div > h3 {
+                font-size: 0.9rem !important;
+                margin-bottom: 0.4rem !important;
+            }
+            
+            .card > div[style*="grid-template-columns"]:last-child > div > a {
+                font-size: 0.8rem !important;
+            }
+        }
+    </style>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'core/base.html' %}
+{% load blog_extras %}
+
+{% block title %}删除评论 - Meow Blog{% endblock %}
+
+{% block content %}
+    <div style="max-width: 600px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h1 style="margin: 0; color: #333;">删除评论</h1>
+            <a href="{% get_post_url comment.post %}" class="btn-back">← 返回文章</a>
+        </div>
+
+        <div style="border: 1px solid #f5c6cb; border-radius: 0.5rem; padding: 2rem; background-color: #f8d7da;">
+            <h3 style="margin: 0 0 1rem 0; color: #721c24;">⚠️ 确认删除评论</h3>
+            
+            <p style="margin-bottom: 1rem; color: #721c24;">
+                {% if user.is_superuser %}
+                    作为管理员，你确定要删除这条评论吗？
+                {% else %}
+                    你确定要删除这条评论吗？
+                {% endif %}
+            </p>
+            
+            <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 0.25rem; padding: 1rem; margin-bottom: 1rem;">
+                <h4 style="margin: 0 0 0.5rem 0; color: #856404;">评论信息</h4>
+                <div style="color: #856404; font-size: 0.9rem;">
+                    <p style="margin: 0.25rem 0;">评论作者：{{ comment.author.username }}</p>
+                    <p style="margin: 0.25rem 0;">发表时间：{{ comment.created_at|date:"Y年m月d日 H:i" }}</p>
+                    <p style="margin: 0.25rem 0;">所属文章：{{ comment.post.title }}</p>
+                </div>
+            </div>
+            
+            <div style="background-color: #e9ecef; border: 1px solid #dee2e6; border-radius: 0.25rem; padding: 1rem; margin-bottom: 1rem;">
+                <h4 style="margin: 0 0 0.5rem 0; color: #495057;">评论内容预览</h4>
+                <div style="color: #495057; font-size: 0.9rem; line-height: 1.5; max-height: 100px; overflow-y: auto; background: white; padding: 0.75rem; border-radius: 0.25rem;">
+                    {{ comment.content|linebreaks|truncatewords:50 }}
+                </div>
+            </div>
+            
+            {% if user.is_superuser %}
+                <div style="background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 0.25rem; padding: 1rem; margin-bottom: 1rem;">
+                    <h4 style="margin: 0 0 0.5rem 0; color: #721c24;">🔨 管理员操作提醒</h4>
+                    <div style="color: #721c24; font-size: 0.9rem;">
+                        <p style="margin: 0.25rem 0;">• 您正在以管理员身份删除评论</p>
+                        <p style="margin: 0.25rem 0;">• 删除后无法恢复，请谨慎操作</p>
+                        {% if user != comment.author %}
+                            <p style="margin: 0.25rem 0;">• 建议先与评论作者沟通</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div style="background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 0.25rem; padding: 1rem; margin-bottom: 1rem;">
+                    <p style="margin: 0; color: #721c24; font-weight: 500;">
+                        ⚠️ 删除后无法恢复，请谨慎操作！
+                    </p>
+                </div>
+            {% endif %}
+
+            <form method="post" style="margin-top: 1.5rem;">
+                {% csrf_token %}
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" style="background-color: #dc3545; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 0.25rem; font-size: 1rem; cursor: pointer;">
+                        {% if user.is_superuser %}
+                            🔨 确认删除（管理员操作）
+                        {% else %}
+                            确认删除
+                        {% endif %}
+                    </button>
+                    <a href="{% get_post_url comment.post %}" style="background-color: #6c757d; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; display: inline-block;">❌ 取消</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

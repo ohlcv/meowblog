@@ -1,0 +1,53 @@
+{% extends 'core/base.html' %}
+
+{% block title %}我的主页 - Meow Blog{% endblock %}
+
+{% block content %}
+    <h2>我的主页</h2>
+    <p>欢迎回来，{{ user.username }}！在这里管理你的创作内容。</p>
+    
+    {# 显示消息 - 由全局JavaScript系统处理 #}
+    {% if messages %}
+        <div style="display: none;">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <hr>
+
+    <div style="display: flex; gap: 2rem;">
+        <div style="flex: 1;">
+            <h3>管理我的文章分类</h3>
+            {% if categories %}
+                <ul style="list-style: none; padding: 0;">
+                    {% for category in categories %}
+                        <li style="background-color: #f8f9fa; padding: 0.5rem; margin-bottom: 0.5rem; border-radius: 0.25rem; border-left: 3px solid #007bff;">
+                            {{ category.name }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p style="color: #666; font-style: italic; text-align: center;">你还没有创建任何文章分类。</p>
+            {% endif %}
+            
+            <hr style="margin: 1.5rem 0;">
+            <h3>快速操作</h3>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <a href="{% url 'blog:post_create' %}" style="text-decoration: none; background-color: #28a745; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; font-size: 0.9em;">发布新文章</a>
+                <a href="{% url 'blog:post_list' %}" style="text-decoration: none; background-color: #17a2b8; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; font-size: 0.9em;">查看所有文章</a>
+            </div>
+        </div>
+        <div style="flex: 1; border-left: 1px solid #ddd; padding-left: 2rem;">
+            <h3>创建新的文章分类</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ category_form.as_p }}
+                <button type="submit" name="create_category">创建</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

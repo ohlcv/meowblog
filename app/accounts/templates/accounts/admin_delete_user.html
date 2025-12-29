@@ -1,0 +1,74 @@
+{% extends 'core/base.html' %}
+
+{% block title %}删除用户 - Meow Blog{% endblock %}
+
+{% block content %}
+    <div style="max-width: 600px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h1 style="margin: 0; color: #333;">管理员操作：删除用户</h1>
+            <a href="{% url 'accounts:admin_users' %}" class="btn-back">← 返回用户管理</a>
+        </div>
+
+        <div style="border: 1px solid #f5c6cb; border-radius: 0.5rem; padding: 2rem; background-color: #f8d7da;">
+            <h3 style="margin: 0 0 1rem 0; color: #721c24;">⚠️ 确认删除用户</h3>
+            
+            <p style="margin-bottom: 1rem; color: #721c24;">
+                你确定要删除用户 <strong>"{{ target_user.username }}"</strong> 吗？
+            </p>
+            
+            <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 0.25rem; padding: 1rem; margin-bottom: 1rem;">
+                <h4 style="margin: 0 0 0.5rem 0; color: #856404;">用户信息</h4>
+                <div style="color: #856404; font-size: 0.9rem;">
+                    <p style="margin: 0.25rem 0;">用户名：{{ target_user.username }}</p>
+                    {% if target_user.email %}
+                        <p style="margin: 0.25rem 0;">邮箱：{{ target_user.email }}</p>
+                    {% endif %}
+                    {% if target_user.first_name or target_user.last_name %}
+                        <p style="margin: 0.25rem 0;">姓名：{{ target_user.first_name }} {{ target_user.last_name }}</p>
+                    {% endif %}
+                    <p style="margin: 0.25rem 0;">注册时间：{{ target_user.date_joined|date:"Y-m-d H:i" }}</p>
+                    <p style="margin: 0.25rem 0;">最后登录：{% if target_user.last_login %}{{ target_user.last_login|date:"Y-m-d H:i" }}{% else %}从未登录{% endif %}</p>
+                    <p style="margin: 0.25rem 0;">账户状态：{% if target_user.is_active %}激活{% else %}已禁用{% endif %}</p>
+                    {% if target_user.is_staff %}
+                        <p style="margin: 0.25rem 0; color: #dc3545; font-weight: bold;">⚠️ 该用户是管理员</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div style="background-color: #d1ecf1; border: 1px solid #bee5eb; border-radius: 0.25rem; padding: 1rem; margin-bottom: 1rem;">
+                <h4 style="margin: 0 0 0.5rem 0; color: #0c5460;">用户数据统计</h4>
+                <div style="color: #0c5460; font-size: 0.9rem;">
+                    <p style="margin: 0.25rem 0;">发布文章：{{ user_posts_count }} 篇</p>
+                    <p style="margin: 0.25rem 0;">创建分类：{{ user_categories_count }} 个</p>
+                    <p style="margin: 0.25rem 0;">发表评论：{{ user_comments_count }} 条</p>
+                </div>
+            </div>
+            
+            <div style="background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 0.25rem; padding: 1rem; margin-bottom: 1rem;">
+                <h4 style="margin: 0 0 0.5rem 0; color: #721c24;">⚠️ 重要提醒</h4>
+                <div style="color: #721c24; font-size: 0.9rem;">
+                    <p style="margin: 0.25rem 0;">• 删除用户后，该用户的所有数据将被永久删除</p>
+                    <p style="margin: 0.25rem 0;">• 包括：用户账户、发布的文章、创建的分类、发表的评论</p>
+                    <p style="margin: 0.25rem 0;">• 此操作无法撤销，请谨慎考虑</p>
+                    {% if user_posts_count > 0 or user_comments_count > 0 or user_categories_count > 0 %}
+                        <p style="margin: 0.25rem 0; font-weight: bold;">• 该用户有活跃数据，删除将影响网站内容</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <form method="post" style="margin-top: 1.5rem;">
+                {% csrf_token %}
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" 
+                            style="background-color: #dc3545; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 0.25rem; font-size: 1rem; cursor: pointer;">
+                        确认删除
+                    </button>
+                    <a href="{% url 'accounts:admin_users' %}" 
+                       style="background-color: #6c757d; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; display: inline-block;">
+                        取消
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

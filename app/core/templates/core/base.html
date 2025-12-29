@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Permissions-Policy" content="unload=(), beforeunload=()">
+    <meta http-equiv="Feature-Policy" content="unload 'none'; beforeunload 'none'">
+    
+    {% load static %}
+    
+    <!-- Favicon 配置 - 支持多种格式和尺寸 -->
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon.png' %}">
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
+    <link rel="apple-touch-icon" href="{% static 'images/favicon.png' %}">
+    
+    <title>{% block title %}Meow Blog{% endblock %}</title>
+    
+    <!-- CSS 文件 -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'css/avatar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+    <link rel="stylesheet" href="{% static 'css/markdown.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pages.css' %}">
+    <link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- 导航栏 -->
+    {% include 'components/navbar.html' %}
+
+    <!-- 主内容区域 -->
+    <div class="main-wrapper">
+        <main class="main-content">
+            <div class="container">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <!-- 页脚 -->
+    {% include 'components/footer.html' %}
+
+    <!-- JavaScript 文件 -->
+    <script src="{% static 'js/mobile-menu.js' %}"></script>
+    <script src="{% static 'js/common.js' %}"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

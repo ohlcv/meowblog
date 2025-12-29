@@ -1,0 +1,206 @@
+{% extends 'core/base.html' %}
+{% load blog_extras %}
+
+{% block title %}管理面板 - Meow Blog{% endblock %}
+
+{% block content %}
+    <div class="fade-in-up page-container">
+        <div class="page-header">
+            <div class="page-header-content">
+                <div class="page-header-title">
+                    <h1 class="page-title">🔨 超级管理员面板</h1>
+                </div>
+                <div class="page-header-actions">
+                    <a href="{% url 'accounts:profile_center' %}" class="btn-back">← 返回个人中心</a>
+                </div>
+            </div>
+        </div>
+        
+        {# 显示消息 - 由全局JavaScript系统处理 #}
+        {% if messages %}
+            <div style="display: none;">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {# 系统统计 #}
+        <div class="card stats-card">
+            <h2 class="section-title stats-title">📈 系统统计</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">{{ total_users }}</div>
+                    <div class="stat-label">总用户数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">{{ total_posts }}</div>
+                    <div class="stat-label">总文章数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">{{ total_comments }}</div>
+                    <div class="stat-label">总评论数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">{{ total_categories }}</div>
+                    <div class="stat-label">总分类数</div>
+                </div>
+            </div>
+        </div>
+
+        {# 管理功能 - 横向布局 #}
+        <div class="page-content">
+            <div class="horizontal-layout">
+                <div class="card admin-card" data-url="{% url 'accounts:admin_users' %}">
+                    <div class="card-icon">👥</div>
+                    <h3 class="card-title">用户管理</h3>
+                    <p class="card-description">查看和管理所有用户账户</p>
+                    <div class="btn btn-danger btn-full">管理用户</div>
+                </div>
+                
+                <div class="card admin-card" data-url="/admin/">
+                    <div class="card-icon">⚙️</div>
+                    <h3 class="card-title">Django Admin</h3>
+                    <p class="card-description">进入Django原生管理后台</p>
+                    <div class="btn btn-secondary btn-full">进入后台</div>
+                </div>
+            </div>
+        </div>
+
+        {# 最近活动 #}
+        <div class="status-grid">
+            {# 最近注册用户 #}
+            <div>
+                <h2 style="margin-bottom: 2rem; color: #2c3e50; font-weight: 600; text-align: center;">👤 最近注册用户</h2>
+                {% if recent_users %}
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        {% for user in recent_users %}
+                            <div class="card" style="padding: 1rem; background: white; border-left: 4px solid #28a745;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600; color: #2c3e50;">{{ user.username }}</div>
+                                        <div style="color: #6c757d; font-size: 0.9rem;">{{ user.date_joined|date:"年m月d日 H:i" }}</div>
+                                    </div>
+                                    {% if user.is_superuser %}
+                                        <span style="background: #dc3545; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem;">管理员</span>
+                                    {% elif user.is_staff %}
+                                        <span style="background: #ffc107; color: #212529; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem;">员工</span>
+                                    {% else %}
+                                        <span style="background: #28a745; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.8rem;">用户</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="card" style="text-align: center; padding: 2rem; color: #6c757d;">
+                        暂无用户
+                    </div>
+                {% endif %}
+            </div>
+
+            {# 最近文章 #}
+            <div>
+                <h2 style="margin-bottom: 2rem; color: #2c3e50; font-weight: 600; text-align: center;">📝 最近文章</h2>
+                {% if recent_posts %}
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        {% for post in recent_posts %}
+                            {% include 'blog/includes/post_card.html' with post=post card_style='list' show_author_link=True show_visibility=True show_stats=False show_content_preview=False %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="card" style="text-align: center; padding: 2rem; color: #6c757d;">
+                        暂无文章
+                    </div>
+                {% endif %}
+            </div>
+
+            {# 最近评论 #}
+            <div>
+                <h2 style="margin-bottom: 2rem; color: #2c3e50; font-weight: 600; text-align: center;">💬 最近评论</h2>
+                {% if recent_comments %}
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        {% for comment in recent_comments %}
+                            <div class="card" style="padding: 1rem; background: white; border-left: 4px solid #6c757d;">
+                                <div>
+                                    <div style="font-weight: 600; color: #2c3e50; margin-bottom: 0.25rem;">{{ comment.author.username }}</div>
+                                    <div style="color: #495057; font-size: 0.9rem; margin-bottom: 0.5rem;">{{ comment.content|truncatechars:50 }}</div>
+                                    <div style="color: #6c757d; font-size: 0.8rem;">
+                                        在《<a href="{% get_post_url comment.post %}" style="color: #007bff; text-decoration: none;">{{ comment.post.title|truncatechars:20 }}</a>》· {{ comment.created_at|date:"m月d日" }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="card" style="text-align: center; padding: 2rem; color: #6c757d;">
+                        暂无评论
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .stat-item {
+            transition: all 0.3s ease;
+        }
+        
+        .stat-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .admin-card {
+            position: relative;
+        }
+        
+        .admin-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(220, 53, 69, 0.3);
+        }
+        
+        .admin-card[data-url="/admin/"]:hover {
+            box-shadow: 0 10px 30px rgba(108, 117, 125, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem !important;
+            }
+            
+            .card {
+                padding: 1.5rem !important;
+            }
+        }
+    </style>
+    
+    <script>
+        // 管理面板交互功能模块
+        const AdminPanel = {
+            // 初始化函数
+            init: function() {
+                this.bindCardClickEvents();
+            },
+            
+            // 绑定卡片点击事件
+            bindCardClickEvents: function() {
+                const adminCards = document.querySelectorAll('.admin-card');
+                adminCards.forEach(card => {
+                    card.addEventListener('click', function() {
+                        const url = this.getAttribute('data-url');
+                        if (url) {
+                            window.location.href = url;
+                        }
+                    });
+                });
+            }
+        };
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            AdminPanel.init();
+        });
+    </script>
+{% endblock %}

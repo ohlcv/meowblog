@@ -1,0 +1,405 @@
+{% extends 'core/base.html' %}
+{% load blog_extras %}
+
+{% block title %}{% if post %}编辑文章{% elif category %}在 {{ category.name }} 分类下创建文章{% else %}发布新文章{% endif %} - Meow Blog{% endblock %}
+
+{% block content %}
+    <div class="fade-in-up page-container">
+        <div class="page-header">
+            <div class="page-header-content">
+                <div class="page-header-title">
+                    <h1 class="page-title">
+                        {% if post %}
+                            ✏️ 编辑文章
+                        {% elif category %}
+                            ✏️ 在 "{{ category.name }}" 分类下创建文章
+                        {% else %}
+                            ✏️ 发布新文章
+                        {% endif %}
+                    </h1>
+                </div>
+                <div class="page-header-actions">
+                    <a href="{% if post %}{% get_post_url post %}{% elif category %}{% url 'accounts:category_posts' category_id=category.id %}{% else %}{% url 'blog:post_list' %}{% endif %}" class="btn-back">← 返回</a>
+                </div>
+            </div>
+        </div>
+        
+        {# 显示消息 - 由全局JavaScript系统处理 #}
+        {% if messages %}
+            <div style="display: none;">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="card">
+            <form method="post" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="{{ form.title.id_for_label }}" class="form-label">{{ form.title.label }}</label>
+                    {{ form.title }}
+                    {% if form.title.errors %}
+                        <div class="error">{{ form.title.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.category.id_for_label }}" class="form-label">{{ form.category.label }}</label>
+                    {{ form.category }}
+                    {% if form.category.errors %}
+                        <div class="error">{{ form.category.errors.0 }}</div>
+                    {% endif %}
+                    <small style="color: #6c757d; font-size: 0.9rem; margin-top: 0.5rem; display: block;">
+                        选择文章分类，如果不选择将归入未分类
+                    </small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.visibility.id_for_label }}" class="form-label">{{ form.visibility.label }}</label>
+                    {{ form.visibility }}
+                    {% if form.visibility.errors %}
+                        <div class="error">{{ form.visibility.errors.0 }}</div>
+                    {% endif %}
+                    <small style="color: #6c757d; font-size: 0.9rem; margin-top: 0.5rem; display: block;">
+                        <strong>🌐 公开：</strong>所有用户都可以看到<br>
+                        <strong>🤝 互关：</strong>只有互相关注的用户可以看到<br>
+                        <strong>🔒 私密：</strong>只有你自己可以看到
+                    </small>
+                </div>
+                
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <label for="{{ form.content.id_for_label }}" class="form-label">{{ form.content.label }}</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button type="button" id="preview-toggle" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+                                👁️ 预览
+                            </button>
+                            <button type="button" id="markdown-help" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+                                ❓ 帮助
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="editor-container" style="display: block;">
+                        {{ form.content }}
+                    </div>
+                    
+                    <div id="preview-container" style="display: none; background: white; border: 2px solid #e9ecef; border-radius: 0.5rem; padding: 1.5rem; min-height: 400px;">
+                        <div id="markdown-preview" class="markdown-content"></div>
+                    </div>
+                    
+                    {% if form.content.errors %}
+                        <div class="error">{{ form.content.errors.0 }}</div>
+                    {% endif %}
+                    
+                    <small style="color: #6c757d; font-size: 0.9rem; margin-top: 0.5rem; display: block;">
+                        {{ form.content.help_text }}
+                    </small>
+                </div>
+                
+                
+                <div style="display: flex; gap: 1rem; justify-content: center; padding-top: 1rem;">
+                    <button type="submit" class="btn btn-primary" id="submit-btn" style="padding: 1rem 2rem; font-weight: 600;">
+                        {% if post %}💾 保存修改{% else %}📝 发布文章{% endif %}
+                    </button>
+                    <a href="{% if post %}{% get_post_url post %}{% elif category %}{% url 'accounts:category_posts' category_id=category.id %}{% else %}{% url 'blog:post_list' %}{% endif %}" class="btn btn-secondary" style="padding: 1rem 2rem;">❌ 取消</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <style>
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        input[type="text"], select, textarea {
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        
+        input[type="text"]:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 300px;
+            line-height: 1.6;
+        }
+        
+        .error {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem !important;
+            }
+            
+            .card {
+                padding: 1.5rem !important;
+            }
+            
+            .fade-in-up > div:first-child {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+        }
+    </style>
+    
+    <script>
+        
+        // Markdown预览功能
+        const previewToggle = document.getElementById('preview-toggle');
+        const editorContainer = document.getElementById('editor-container');
+        const previewContainer = document.getElementById('preview-container');
+        const markdownPreview = document.getElementById('markdown-preview');
+        const markdownHelp = document.getElementById('markdown-help');
+        
+        let isPreviewMode = false;
+        
+        // 表单提交调试
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            if (form && submitBtn) {
+                // 添加表单提交监听器
+                form.addEventListener('submit', function(e) {
+                    console.log('表单提交事件触发');
+                    
+                    // 检查必填字段
+                    const title = document.querySelector('input[name="title"]').value.trim();
+                    const content = document.querySelector('textarea[name="content"]').value.trim();
+                    
+                    if (!title) {
+                        console.error('标题不能为空');
+                        e.preventDefault();
+                        alert('标题不能为空');
+                        return;
+                    }
+                    
+                    if (!content) {
+                        console.error('内容不能为空');
+                        e.preventDefault();
+                        alert('内容不能为空');
+                        return;
+                    }
+                    
+                    console.log('表单验证通过，正在提交...');
+                    submitBtn.textContent = '发布中...';
+                    submitBtn.disabled = true;
+                });
+                
+                // 添加按钮点击监听器
+                submitBtn.addEventListener('click', function(e) {
+                    console.log('提交按钮被点击');
+                });
+            }
+        });
+        
+        // 预览切换功能
+        if (previewToggle && editorContainer && previewContainer && markdownPreview) {
+            previewToggle.addEventListener('click', function() {
+                isPreviewMode = !isPreviewMode;
+                
+                if (isPreviewMode) {
+                    // 切换到预览模式
+                    editorContainer.style.display = 'none';
+                    previewContainer.style.display = 'block';
+                    previewToggle.textContent = '✏️ 编辑';
+                    updatePreview();
+                } else {
+                    // 切换到编辑模式
+                    editorContainer.style.display = 'block';
+                    previewContainer.style.display = 'none';
+                    previewToggle.textContent = '👁️ 预览';
+                }
+            });
+            
+            // 实时更新预览
+            if (contentTextarea) {
+                contentTextarea.addEventListener('input', function() {
+                    if (isPreviewMode) {
+                        updatePreview();
+                    }
+                });
+            }
+        }
+        
+        // 更新预览内容
+        function updatePreview() {
+            if (contentTextarea && markdownPreview) {
+                const markdownText = contentTextarea.value;
+                if (markdownText.trim()) {
+                    // 简单的Markdown渲染
+                    let html = markdownText
+                        // 标题
+                        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                        // 粗体和斜体
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                        // 代码块
+                        .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+                        .replace(/`(.*?)`/g, '<code>$1</code>')
+                        // 链接
+                        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
+                        // 图片
+                        .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" style="max-width: 100%; height: auto;">')
+                        // 列表
+                        .replace(/^\* (.*$)/gim, '<li>$1</li>')
+                        .replace(/^- (.*$)/gim, '<li>$1</li>')
+                        .replace(/^(\d+)\. (.*$)/gim, '<li>$2</li>')
+                        // 引用
+                        .replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>')
+                        // 分割线
+                        .replace(/^---$/gim, '<hr>')
+                        .replace(/^\*\*\*$/gim, '<hr>')
+                        // 换行
+                        .replace(/\n/g, '<br>');
+                    
+                    // 处理列表
+                    html = html.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
+                    
+                    markdownPreview.innerHTML = html;
+                } else {
+                    markdownPreview.innerHTML = '<p style="color: #6c757d; font-style: italic;">暂无内容预览</p>';
+                }
+            }
+        }
+        
+        // Markdown帮助功能
+        if (markdownHelp) {
+            markdownHelp.addEventListener('click', function() {
+                const helpContent = `
+# Markdown语法帮助
+
+## 标题
+\`\`\`
+# 一级标题
+## 二级标题
+### 三级标题
+\`\`\`
+
+## 文本格式
+\`\`\`
+**粗体文本**
+*斜体文本*
+\`行内代码\`
+\`\`\`
+
+## 代码块
+\`\`\`
+\`\`\`python
+def hello():
+    print("Hello, World!")
+\`\`\`
+\`\`\`
+
+## 链接和图片
+\`\`\`
+[链接文本](https://example.com)
+![图片描述](图片URL)
+\`\`\`
+
+## 列表
+\`\`\`
+- 无序列表项1
+- 无序列表项2
+
+1. 有序列表项1
+2. 有序列表项2
+\`\`\`
+
+## 引用
+\`\`\`
+> 这是引用内容
+\`\`\`
+
+## 表格
+\`\`\`
+| 列1 | 列2 | 列3 |
+|-----|-----|-----|
+| 内容1 | 内容2 | 内容3 |
+\`\`\`
+
+## 分割线
+\`\`\`
+---
+\`\`\`
+                `;
+                
+                // 创建模态框显示帮助内容
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 10000;
+                `;
+                
+                const modalContent = document.createElement('div');
+                modalContent.style.cssText = `
+                    background: white;
+                    padding: 2rem;
+                    border-radius: 1rem;
+                    max-width: 600px;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                `;
+                
+                modalContent.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2 style="margin: 0; color: #2c3e50;">Markdown语法帮助</h2>
+                        <button id="close-help" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #6c757d;">&times;</button>
+                    </div>
+                    <div class="markdown-content">${helpContent.replace(/\n/g, '<br>').replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/`(.*?)`/g, '<code>$1</code>')}</div>
+                `;
+                
+                modal.appendChild(modalContent);
+                document.body.appendChild(modal);
+                
+                // 关闭模态框
+                const closeHelp = document.getElementById('close-help');
+                closeHelp.addEventListener('click', function() {
+                    document.body.removeChild(modal);
+                });
+                
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        document.body.removeChild(modal);
+                    }
+                });
+            });
+        }
+    </script>
+{% endblock %}

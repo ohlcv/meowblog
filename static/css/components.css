@@ -1,0 +1,1061 @@
+/* ===== Meow Blog 组件样式 ===== */
+
+/* ===== 现代化卡片系统 ===== */
+
+.card {
+    background: var(--bg-primary);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 4px 6px rgba(251, 114, 153, 0.12), 0 2px 4px rgba(251, 114, 153, 0.08);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-xl);
+    transition: all var(--transition-normal);
+    border: 1px solid var(--border-primary);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--primary-gradient);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(251, 114, 153, 0.02) 0%, rgba(255, 143, 179, 0.02) 100%);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    pointer-events: none;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px rgba(251, 114, 153, 0.15), 0 4px 6px rgba(251, 114, 153, 0.1);
+    border-color: var(--primary-color);
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+.card:hover::after {
+    opacity: 1;
+}
+
+/* 卡片点击效果 */
+/* 移除卡片点击缩放动画，保持简洁 */
+
+/* 卡片加载状态 */
+.card.loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.card.loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    opacity: 0.8;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 0.4;
+    }
+}
+
+/* 卡片尺寸变体 */
+.card-sm {
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-lg);
+}
+
+.card-lg {
+    padding: var(--space-2xl);
+    border-radius: var(--radius-2xl);
+    margin-bottom: var(--space-2xl);
+}
+
+.card-xs {
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-md);
+}
+
+/* 卡片样式变体 */
+.card-flat {
+    box-shadow: none;
+    border: 1px solid var(--border-primary);
+}
+
+.card-elevated {
+    box-shadow: 0 20px 25px rgba(251, 114, 153, 0.15), 0 10px 10px rgba(251, 114, 153, 0.08);
+}
+
+.card-floating {
+    box-shadow: 0 10px 15px rgba(251, 114, 153, 0.15), 0 4px 6px rgba(251, 114, 153, 0.1);
+    border: none;
+}
+
+/* 卡片颜色变体 */
+.card-primary {
+    background: var(--primary-lightest);
+    border-color: var(--primary-lighter);
+}
+
+.card-secondary {
+    background: var(--primary-lightest);
+    border-color: var(--primary-lighter);
+}
+
+.card-gradient {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+}
+
+.card-gradient-secondary {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+}
+
+.card-gradient-light {
+    background: linear-gradient(135deg, rgba(251, 114, 153, 0.08) 0%, rgba(251, 114, 153, 0.12) 100%);
+    border-left: 4px solid var(--primary-color);
+}
+
+.card-gradient-warning {
+    background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+    border-left: 4px solid var(--warning-color);
+}
+
+.card-gradient-danger {
+    background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+    border-left: 4px solid var(--danger-color);
+}
+
+.card-gradient-success {
+    background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+    border-left: 4px solid var(--success-color);
+}
+
+/* 卡片内容变体 */
+.card-header {
+    padding: var(--space-lg) var(--space-xl) var(--space-md) var(--space-xl);
+    border-bottom: 1px solid var(--border-primary);
+    margin: calc(-1 * var(--space-xl)) calc(-1 * var(--space-xl)) var(--space-lg) calc(-1 * var(--space-xl));
+    background: var(--primary-lightest);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.card-body {
+    padding: 0;
+}
+
+.card-footer {
+    padding: var(--space-md) var(--space-xl) var(--space-lg) var(--space-xl);
+    border-top: 1px solid var(--border-primary);
+    margin: var(--space-lg) calc(-1 * var(--space-xl)) calc(-1 * var(--space-xl)) calc(-1 * var(--space-xl));
+    background: var(--primary-lightest);
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+}
+
+/* 特殊卡片样式 */
+.card-stats {
+    background: var(--primary-gradient);
+    color: white;
+    text-align: center;
+    border: none;
+    box-shadow: 0 4px 14px rgba(251, 114, 153, 0.2);
+}
+
+.card-stats:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(251, 114, 153, 0.25);
+}
+
+.card-info {
+    background: var(--info-lightest);
+    border-left: 4px solid var(--info-color);
+}
+
+.card-warning {
+    background: var(--warning-lightest);
+    border-left: 4px solid var(--warning-color);
+}
+
+.card-danger {
+    background: var(--danger-lightest);
+    border-left: 4px solid var(--danger-color);
+}
+
+.card-success {
+    background: var(--success-lightest);
+    border-left: 4px solid var(--success-color);
+}
+
+/* 卡片网格布局 */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-xl);
+}
+
+.card-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-lg);
+}
+
+.card-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-md);
+}
+
+/* ===== 统一按钮系统 ===== */
+
+/* ===== 现代化按钮系统 ===== */
+
+/* 基础按钮样式 */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: var(--font-base);
+    line-height: 1.5;
+    transition: all var(--transition-normal);
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    transform-style: preserve-3d;
+}
+
+/* 按钮波纹效果 */
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* 按钮悬停效果增强 - 移除通用悬停，让特定按钮类型自己处理 */
+
+/* 移除按钮点击缩放动画，保持简洁 */
+
+/* 按钮发光效果 */
+.btn.glow {
+    box-shadow: 0 0 20px rgba(251, 114, 153, 0.3);
+}
+
+.btn.glow:hover {
+    box-shadow: 0 0 30px rgba(251, 114, 153, 0.5), 0 0 40px rgba(251, 114, 153, 0.3);
+}
+
+/* 按钮尺寸变体 */
+.btn-xs {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-xs);
+    border-radius: var(--radius-sm);
+}
+
+.btn-sm {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-sm);
+    border-radius: var(--radius-sm);
+}
+
+.btn-lg {
+    padding: var(--space-md) var(--space-xl);
+    font-size: var(--font-lg);
+    border-radius: var(--radius-lg);
+}
+
+.btn-xl {
+    padding: var(--space-lg) var(--space-2xl);
+    font-size: var(--font-xl);
+    border-radius: var(--radius-lg);
+}
+
+.btn-full {
+    width: 100%;
+}
+
+/* 按钮颜色变体 - 统一粉色主题 */
+.btn-primary {
+    background: var(--primary-gradient);
+    color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 14px rgba(251, 114, 153, 0.2);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(251, 114, 153, 0.25);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 14px rgba(251, 114, 153, 0.2);
+    transition: all var(--transition-normal);
+}
+
+.btn-secondary {
+    background: var(--primary-gradient);
+    color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 6px rgba(251, 114, 153, 0.12), 0 2px 4px rgba(251, 114, 153, 0.08);
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px rgba(251, 114, 153, 0.15), 0 4px 6px rgba(251, 114, 153, 0.1);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 14px rgba(251, 114, 153, 0.2);
+    transition: all var(--transition-normal);
+}
+
+.btn-success {
+    background: var(--primary-gradient);
+    color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 6px rgba(251, 114, 153, 0.12), 0 2px 4px rgba(251, 114, 153, 0.08);
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px rgba(251, 114, 153, 0.15), 0 4px 6px rgba(251, 114, 153, 0.1);
+}
+
+.btn-success:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 14px rgba(251, 114, 153, 0.2);
+    transition: all var(--transition-normal);
+}
+
+.btn-warning {
+    background: var(--primary-gradient);
+    color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 6px rgba(251, 114, 153, 0.12), 0 2px 4px rgba(251, 114, 153, 0.08);
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px rgba(251, 114, 153, 0.15), 0 4px 6px rgba(251, 114, 153, 0.1);
+}
+
+.btn-warning:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 14px rgba(251, 114, 153, 0.2);
+    transition: all var(--transition-normal);
+}
+
+.btn-danger {
+    background: var(--primary-gradient);
+    color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 6px rgba(251, 114, 153, 0.12), 0 2px 4px rgba(251, 114, 153, 0.08);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px rgba(251, 114, 153, 0.15), 0 4px 6px rgba(251, 114, 153, 0.1);
+}
+
+.btn-danger:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 14px rgba(251, 114, 153, 0.2);
+    transition: all var(--transition-normal);
+}
+
+.btn-info {
+    background: var(--primary-gradient);
+    color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 6px rgba(251, 114, 153, 0.12), 0 2px 4px rgba(251, 114, 153, 0.08);
+}
+
+.btn-info:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px rgba(251, 114, 153, 0.15), 0 4px 6px rgba(251, 114, 153, 0.1);
+}
+
+.btn-info:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 14px rgba(251, 114, 153, 0.2);
+    transition: all var(--transition-normal);
+}
+
+/* 轮廓按钮变体 - 统一粉色主题 */
+.btn-outline-primary {
+    background: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(251, 114, 153, 0.2);
+}
+
+.btn-outline-secondary {
+    background: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-secondary:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(251, 114, 153, 0.2);
+}
+
+.btn-outline-success {
+    background: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-success:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(251, 114, 153, 0.2);
+}
+
+.btn-outline-warning {
+    background: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-warning:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(251, 114, 153, 0.2);
+}
+
+.btn-outline-danger {
+    background: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-danger:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(251, 114, 153, 0.2);
+}
+
+.btn-outline-info {
+    background: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-info:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(251, 114, 153, 0.2);
+}
+
+/* 重复的.btn-outline-secondary定义已移除 */
+
+/* 幽灵按钮变体 */
+.btn-ghost {
+    background: transparent;
+    color: var(--text-primary);
+    border-color: transparent;
+}
+
+.btn-ghost:hover {
+    background: var(--primary-lightest);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* 按钮状态 */
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.btn-loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* 特殊按钮样式 */
+.follow-btn {
+    background: var(--primary-gradient) !important;
+    color: var(--text-white) !important;
+    border: 1px solid var(--primary-color) !important;
+    border-radius: var(--radius-md) !important;
+    padding: var(--space-sm) var(--space-md) !important;
+    font-size: var(--font-sm) !important;
+    cursor: pointer;
+    transition: all var(--transition-normal) !important;
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-weight: 500;
+    box-shadow: 0 4px 14px rgba(251, 114, 153, 0.2) !important;
+}
+
+.follow-btn:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%) !important;
+    border-color: var(--primary-dark) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(251, 114, 153, 0.25) !important;
+}
+
+.follow-btn:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 4px 14px rgba(251, 114, 153, 0.2) !important;
+}
+
+/* 已关注状态 - 高优先级 */
+.follow-btn.following,
+button.follow-btn.following {
+    background: var(--primary-lightest) !important;
+    color: var(--text-gray) !important;
+    border-color: var(--text-gray-light) !important;
+    transition: all var(--transition-normal) !important;
+}
+
+.follow-btn.following:hover,
+button.follow-btn.following:hover {
+    background: linear-gradient(135deg, var(--text-gray-light) 0%, var(--text-gray) 100%) !important;
+    color: var(--text-gray-dark) !important;
+    border-color: var(--text-gray) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 8px rgba(251, 114, 153, 0.1) !important;
+}
+
+/* 未关注状态 - 高优先级 */
+.follow-btn.not-following,
+button.follow-btn.not-following {
+    background: var(--primary-gradient) !important;
+    color: var(--text-white) !important;
+    border-color: var(--primary-color) !important;
+    transition: all var(--transition-normal) !important;
+}
+
+.follow-btn.not-following:hover,
+button.follow-btn.not-following:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%) !important;
+    border-color: var(--primary-dark) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(251, 114, 153, 0.3) !important;
+}
+
+/* 排序按钮专用样式 */
+.sort-btn {
+    border: 1px solid;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.sort-btn-active {
+    background: var(--primary-gradient) !important;
+    color: var(--text-white) !important;
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 4px 12px rgba(251, 114, 153, 0.3) !important;
+    transform: translateY(-1px);
+}
+
+.sort-btn-active:hover {
+    background: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(251, 114, 153, 0.4) !important;
+}
+
+.sort-btn-inactive {
+    background: rgba(255, 255, 255, 0.8) !important;
+    color: var(--text-secondary) !important;
+    border-color: rgba(251, 114, 153, 0.3) !important;
+    box-shadow: 0 2px 8px rgba(251, 114, 153, 0.1) !important;
+}
+
+.sort-btn-inactive:hover {
+    background: rgba(251, 114, 153, 0.1) !important;
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(251, 114, 153, 0.2) !important;
+}
+
+/* 统一返回按钮样式 - 粉色主题 */
+.btn-back {
+    background: var(--primary-gradient);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all var(--transition-normal);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    box-shadow: 0 4px 6px rgba(251, 114, 153, 0.12), 0 2px 4px rgba(251, 114, 153, 0.08);
+    border: 1px solid rgba(251, 114, 153, 0.2);
+}
+
+.btn-back:hover {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px rgba(251, 114, 153, 0.15), 0 4px 6px rgba(251, 114, 153, 0.1);
+    color: white;
+    text-decoration: none;
+    border-color: rgba(251, 114, 153, 0.3);
+}
+
+/* ===== 统一表单系统 ===== */
+
+.form-group {
+    margin-bottom: var(--space-lg);
+}
+
+.form-label {
+    display: block;
+    margin-bottom: var(--space-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: var(--font-sm);
+    text-align: left;
+}
+
+.form-control {
+    width: 100%;
+    padding: var(--space-md);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    font-size: var(--font-base);
+    line-height: 1.5;
+    transition: all var(--transition-normal);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    box-shadow: 0 2px 8px rgba(251, 114, 153, 0.1);
+    position: relative;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(251, 114, 153, 0.1);
+    background: var(--primary-lightest);
+    transform: translateY(-1px);
+}
+
+.form-control:hover:not(:focus):not(:disabled) {
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(251, 114, 153, 0.1);
+}
+
+.form-control:disabled {
+    background: var(--primary-lightest);
+    color: var(--text-muted);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.form-control::placeholder {
+    color: var(--text-light);
+    transition: color var(--transition-normal);
+}
+
+.form-control:focus::placeholder {
+    color: var(--text-muted);
+}
+
+/* ===== 输入框变体 ===== */
+
+/* 小尺寸输入框 */
+.form-control-sm {
+    padding: var(--space-sm);
+    font-size: var(--font-sm);
+    border-radius: var(--radius-sm);
+    min-height: 2rem;
+}
+
+/* 大尺寸输入框 */
+.form-control-lg {
+    padding: var(--space-lg);
+    font-size: var(--font-lg);
+    border-radius: var(--radius-lg);
+    min-height: 3rem;
+}
+
+/* 搜索输入框专用样式 - 继承form-control样式 */
+.search-input {
+    flex: 1;
+    min-width: 200px;
+    /* 继承form-control的所有样式 */
+    width: 100%;
+    padding: var(--space-md);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    font-size: var(--font-base);
+    line-height: 1.5;
+    transition: all var(--transition-normal);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    box-shadow: 0 2px 8px rgba(251, 114, 153, 0.1);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(251, 114, 153, 0.1);
+    background: var(--primary-lightest);
+    transform: translateY(-1px);
+}
+
+.search-input:hover:not(:focus):not(:disabled) {
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(251, 114, 153, 0.1);
+}
+
+.search-input::placeholder {
+    color: var(--text-light);
+    transition: color var(--transition-normal);
+}
+
+.search-input:focus::placeholder {
+    color: var(--text-muted);
+}
+
+/* ===== 输入框状态 ===== */
+
+/* 错误状态 */
+.form-control-error {
+    border-color: var(--danger-color);
+    box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.1);
+}
+
+.form-control-error:focus {
+    border-color: var(--danger-color);
+    box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-control-error:hover:not(:focus) {
+    border-color: var(--danger-color);
+    box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.1);
+}
+
+/* 成功状态 */
+.form-control-success {
+    border-color: var(--success-color);
+    box-shadow: 0 0 0 3px rgba(0, 200, 80, 0.1);
+}
+
+.form-control-success:focus {
+    border-color: var(--success-color);
+    box-shadow: 0 0 0 3px rgba(0, 200, 80, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-control-success:hover:not(:focus) {
+    border-color: var(--success-color);
+    box-shadow: 0 0 0 3px rgba(0, 200, 80, 0.1);
+}
+
+/* 警告状态 */
+.form-control-warning {
+    border-color: var(--warning-color);
+    box-shadow: 0 4px 15px rgba(255, 187, 51, 0.2);
+}
+
+.form-control-warning:focus {
+    border-color: var(--warning-color);
+    box-shadow: 0 4px 15px rgba(255, 187, 51, 0.2);
+    transform: translateY(-1px);
+}
+
+/* 信息状态 */
+.form-control-info {
+    border-color: var(--info-color);
+    box-shadow: 0 4px 15px rgba(51, 180, 229, 0.2);
+}
+
+.form-control-info:focus {
+    border-color: var(--info-color);
+    box-shadow: 0 4px 15px rgba(51, 180, 229, 0.2);
+    transform: translateY(-1px);
+}
+
+/* ===== 表单组和错误信息 ===== */
+
+/* 表单组容器 */
+.form-group {
+    margin-bottom: var(--space-lg);
+    position: relative;
+}
+
+/* 表单错误信息 */
+.form-error {
+    display: block;
+    color: var(--danger-color);
+    font-size: var(--font-sm);
+    margin-top: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    background: rgba(255, 68, 68, 0.1);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--danger-color);
+    animation: fadeInUp var(--duration-fast) ease;
+}
+
+/* 表单成功信息 */
+.form-success {
+    display: block;
+    color: var(--success-color);
+    font-size: var(--font-sm);
+    margin-top: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    background: rgba(0, 200, 80, 0.1);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--success-color);
+    animation: fadeInUp var(--duration-fast) ease;
+}
+
+/* 移除单独的帮助文本样式，使用输入框内的placeholder */
+
+/* 表单标签变体 */
+.form-label-required::after {
+    content: ' *';
+    color: var(--danger-color);
+    font-weight: bold;
+}
+
+.form-label-optional::after {
+    content: ' (可选)';
+    color: var(--text-muted);
+    font-weight: normal;
+    font-size: var(--font-xs);
+}
+
+/* ===== 复选框和单选框样式 ===== */
+
+/* 复选框样式 */
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 0.5rem;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+    transition: all var(--transition-normal);
+}
+
+input[type="checkbox"]:hover {
+    transform: scale(1.1);
+}
+
+input[type="checkbox"]:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.form-check-input {
+    width: 18px;
+    height: 18px;
+    margin-right: 0.5rem;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+    transition: all var(--transition-normal);
+}
+
+.form-check-input:hover {
+    transform: scale(1.1);
+}
+
+.form-check-input:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* 单选框样式 */
+input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 0.5rem;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+    transition: all var(--transition-normal);
+}
+
+input[type="radio"]:hover {
+    transform: scale(1.1);
+}
+
+input[type="radio"]:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* 头像样式已移至 static/css/avatar.css */
+
+/* ===== 其他组件样式 ===== */
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.badge.primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: white;
+}
+
+.badge.success {
+    background: linear-gradient(135deg, var(--success-color) 0%, #20c997 100%);
+    color: white;
+}
+
+.badge.warning {
+    background: linear-gradient(135deg, var(--warning-color) 0%, #fd7e14 100%);
+    color: white;
+}
+
+.badge.danger {
+    background: linear-gradient(135deg, var(--danger-color) 0%, #c82333 100%);
+    color: white;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 1rem;
+    color: var(--text-muted);
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+}
+
+/* 消息样式 */
+.alert {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin: 1rem 0;
+    border: none;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.alert-error {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+.form-error {
+    color: var(--danger-color);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    display: block;
+}

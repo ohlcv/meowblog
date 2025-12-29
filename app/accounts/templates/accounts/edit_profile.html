@@ -1,0 +1,71 @@
+{% extends 'core/base.html' %}
+
+{% block title %}修改个人信息 - Meow Blog{% endblock %}
+
+{% block content %}
+    <div class="fade-in-up page-container">
+        <div class="page-header">
+            <h1>📝 修改个人信息</h1>
+            <a href="{% url 'accounts:user_settings' %}" class="btn-back">← 返回设置</a>
+        </div>
+        
+        {# 显示消息 - 由全局JavaScript系统处理 #}
+        {% if messages %}
+            <div style="display: none;">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="card">
+            <form method="post">
+                {% csrf_token %}
+                
+                {# 标识名（用户名）显示为只读 #}
+                <div class="form-group">
+                    <label>标识名（用户名）</label>
+                    <input type="text" class="form-control" value="{{ user.username }}" readonly>
+                    <small class="form-text text-muted">用于登录，不可修改</small>
+                </div>
+
+                {# 显示名称字段 #}
+                <div class="form-group">
+                    <label for="{{ form.displayname.id_for_label }}">{{ form.displayname.label }}</label>
+                    {{ form.displayname }}
+                    {% if form.displayname.errors %}
+                        <div class="form-error">
+                            {{ form.displayname.errors.0 }}
+                        </div>
+                    {% endif %}
+                    <small class="form-text text-muted">{{ form.displayname.help_text }}</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="form-error">
+                            {{ form.email.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                {# 手机号字段 #}
+                <div class="form-group">
+                    <label>手机号</label>
+                    <input type="text" class="form-control" value="{{ user.profile.phone|default:'未设置' }}" readonly>
+                    <small class="form-text text-muted">手机号暂不支持修改，请联系管理员</small>
+                </div>
+
+                <div class="btn-group-flex">
+                    <button type="submit" class="btn btn-primary">💾 保存修改</button>
+                    <a href="{% url 'accounts:user_settings' %}" class="btn btn-outline-primary">取消</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

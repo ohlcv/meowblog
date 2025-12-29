@@ -1,0 +1,47 @@
+{% comment %}
+文章元数据组件 - 简化版本
+参数：
+- post: 文章对象
+- show_stats: 是否显示统计信息 (默认: false)
+- center_align: 是否居中显示 (默认: false)
+注意：作者信息不在此组件中，需要单独处理
+{% endcomment %}
+
+{% if center_align %}
+<div class="text-body-sm" style="color: #6c757d; font-size: 0.95rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; justify-content: center;">
+{% else %}
+<div class="text-body-sm" style="color: #6c757d; font-size: 0.95rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+{% endif %}
+    <!-- <span style="display: flex; align-items: center; gap: 0.25rem;">
+        👤 {{ post.author.username }}
+    </span> -->
+    <span style="display: flex; align-items: center; gap: 0.25rem;">
+        📅 {{ post.created_at|date:"Y年m月d日" }}
+    </span>
+    {% if post.category %}
+        <span style="display: flex; align-items: center; gap: 0.25rem;">
+            📂 {{ post.category.name }}
+        </span>
+    {% endif %}
+    <span style="display: flex; align-items: center; gap: 0.25rem;">
+        {% if post.visibility == 'public' %}
+            🌐 公开
+        {% elif post.visibility == 'mutual' %}
+            🤝 互关
+        {% elif post.visibility == 'private' %}
+            🔒 私密
+        {% endif %}
+    </span>
+    <span style="display: flex; align-items: center; gap: 0.25rem;">
+        📊 {{ post.word_count }} 字
+    </span>
+    <span style="display: flex; align-items: center; gap: 0.25rem;">
+        ❤️ {{ post.likes_count }} 赞
+    </span>
+    <span style="display: flex; align-items: center; gap: 0.25rem;">
+        ⭐ {{ post.favorites_count }} 收藏
+    </span>
+    <span style="display: flex; align-items: center; gap: 0.25rem;">
+        💬 {{ post.comments.count }} 评论
+    </span>
+</div>

@@ -1,0 +1,34 @@
+{% extends 'core/base.html' %}
+
+{% block title %}管理我的分类 - Meow Blog{% endblock %}
+
+{% block content %}
+    <div class="page-container">
+        <div class="page-header">
+            <h2>管理我的分类</h2>
+        </div>
+        
+        <div class="two-column">
+            <div>
+                <h3>我已创建的分类</h3>
+                {% if categories %}
+                    <ul>
+                        {% for category in categories %}
+                            <li>{{ category.name }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>你还没有创建任何分类。</p>
+                {% endif %}
+            </div>
+            <div class="column-right">
+                <h3>创建新分类</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">创建</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

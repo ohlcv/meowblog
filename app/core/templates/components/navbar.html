@@ -1,0 +1,29 @@
+<!-- 导航栏组件 -->
+<nav class="navbar">
+    <div class="container">
+        <!-- 左侧：品牌和主要导航 -->
+        <div class="nav-left">
+            <a href="{% url 'homepage' %}" class="nav-brand">🐱 Meow Blog</a>
+            <div class="nav-main-links">
+                <a href="{% url 'blog:post_list' %}" class="nav-link">博客</a>
+                <a href="{% url 'about' %}" class="nav-link">关于</a>
+            </div>
+        </div>
+        
+        <!-- 右侧：用户操作区域 -->
+        <div class="nav-right">
+            {% if user.is_authenticated %}
+                {% include 'blog/includes/user_avatar.html' with user=user size='small' show_name=False link_to_profile=True is_navbar=True %}
+            {% else %}
+                <div class="nav-auth-links">
+                    <a href="{% url 'accounts:login' %}" class="nav-link nav-link-login">登录</a>
+                    <a href="{% url 'accounts:signup' %}" class="nav-link nav-link-signup">注册</a>
+                </div>
+            {% endif %}
+            <button class="mobile-menu-toggle">☰</button>
+        </div>
+    </div>
+    
+    <!-- 移动端菜单 -->
+    {% include 'components/mobile-menu.html' %}
+</nav>

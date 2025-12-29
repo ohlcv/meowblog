@@ -1,0 +1,53 @@
+{% extends 'core/base.html' %}
+
+{% block title %}账户已被封禁 - Meow Blog{% endblock %}
+
+{% block content %}
+    <div class="fade-in-up" style="max-width: 600px; margin: 3rem auto; text-align: center;">
+        <div class="card" style="padding: 3rem; background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white;">
+            <div class="empty-state-icon">🚫</div>
+            <h1 class="text-h1" style="color: white; margin-bottom: 2rem;">账户已被封禁</h1>
+            
+            {% if ban_reason %}
+                <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 2rem;">
+                    <h3 class="text-h3" style="color: white;">封禁原因：</h3>
+                    <p class="text-body" style="color: white;">{{ ban_reason }}</p>
+                </div>
+            {% endif %}
+            
+            {% if ban_until %}
+                <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 0.5rem; margin-bottom: 2rem;">
+                    <p class="text-body" style="color: white;">
+                        <strong>封禁结束时间：</strong>{{ ban_until|date:"Y年m月d日 H:i" }}
+                    </p>
+                </div>
+            {% else %}
+                <div style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 0.5rem; margin-bottom: 2rem;">
+                    <p class="text-body" style="color: #ffebee;">
+                        <strong>永久封禁</strong>
+                    </p>
+                </div>
+            {% endif %}
+            
+            {% if banned_by %}
+                <p class="text-body-sm" style="margin: 2rem 0 0 0; opacity: 0.8; color: white;">
+                    操作管理员：{{ banned_by.username }}
+                </p>
+            {% endif %}
+        </div>
+        
+        <div style="margin-top: 2rem;">
+            <a href="{% url 'homepage' %}" class="btn-back">
+                返回首页
+            </a>
+        </div>
+        
+        <div class="info-box">
+            <h4 class="text-h4">申诉说明</h4>
+            <p class="text-body">
+                如果您认为此封禁是误判或有其他疑问，请联系网站管理员进行申诉。
+                请提供详细的申诉理由和相关证据。
+            </p>
+        </div>
+    </div>
+{% endblock %}

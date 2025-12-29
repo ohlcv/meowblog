@@ -1,0 +1,56 @@
+{% extends 'core/base.html' %}
+
+{% block title %}注册 - Meow Blog{% endblock %}
+
+{% block content %}
+    <div class="auth-container">
+        <div class="card auth-card scale-in">
+            <div class="auth-icon">🐱</div>
+            <h2 class="auth-title">加入我们</h2>
+            
+            <!-- 消息提示 - 由全局JavaScript系统处理 -->
+            {% if messages %}
+                <div class="message-container" style="display: none;">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <form method="post" class="auth-form">
+                {% csrf_token %}
+                {% include 'components/input_field.html' with field=form.username label="用户名" required=True %}
+                {% include 'components/input_field.html' with field=form.email label="邮箱" required=True %}
+                {% include 'components/input_field.html' with field=form.phone label="手机号" required=True %}
+                
+                {% include 'components/input_field.html' with field=form.password1 label="密码" required=True %}
+                {% include 'components/input_field.html' with field=form.password2 label="确认密码" required=True %}
+                
+                <div class="form-group form-group-left">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms_checkbox" required>
+                        <label for="terms_checkbox">
+                            我已阅读并同意 
+                            <a href="{% url 'terms_of_service' %}" target="_blank" class="terms-link">服务协议</a> 
+                            和 
+                            <a href="{% url 'privacy_policy' %}" target="_blank" class="terms-link">隐私政策</a>
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-full">
+                    <span>🌱 注册</span>
+                </button>
+            </form>
+            
+            <div class="divider">
+                <p>已有账户？</p>
+                <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary btn-full">
+                    🔑 立即登录
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

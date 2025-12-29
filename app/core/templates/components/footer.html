@@ -1,0 +1,67 @@
+<!-- 页脚组件 -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <!-- 快速链接 -->
+            <div class="footer-section">
+                <h3>快速链接</h3>
+                <ul>
+                    <li>
+                        <a href="{% url 'blog:post_list' %}">📝 博客首页</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li>
+                            <a href="{% url 'accounts:dashboard' %}">👤 个人中心</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+            
+            <!-- 联系方式 -->
+            <div class="footer-section">
+                <h3>联系方式</h3>
+                <div>
+                    <p>
+                        <a href="{% url 'about' %}">🐱 关于我</a>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- 友情链接 -->
+            <div class="footer-section">
+                <h3>友情链接</h3>
+                <div>
+                    <p>💝 如果这个项目对你有帮助，欢迎赞助支持</p>
+                    <p>☕ 一杯咖啡，一份鼓励</p>
+                </div>
+            </div>
+            
+            <!-- 法律条款 -->
+            <div class="footer-section">
+                <h3>法律条款</h3>
+                <ul>
+                    <li>
+                        <a href="{% url 'terms_of_service' %}">📋 服务协议</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'privacy_policy' %}">🔒 隐私政策</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'disclaimer' %}">⚠️ 免责声明</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 版权信息 -->
+        <div class="footer-copyright">
+            <p class="footer-text">
+                © 2025 Meow Blog. 基于 Django 构建 | 
+                <span style="color: var(--primary-color);">❤️</span> 用心分享，记录成长
+            </p>
+            <p class="footer-subtext">
+                Made with Django 5.2.6 & Python 3.8+
+            </p>
+        </div>
+    </div>
+</footer>

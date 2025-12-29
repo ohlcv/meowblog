@@ -1,0 +1,268 @@
+{% extends 'core/base.html' %}
+
+{% block title %}账户设置 - Meow Blog{% endblock %}
+
+{% block content %}
+    <div class="fade-in-up page-container">
+        <div class="page-header">
+            <div class="page-header-content">
+                <div class="page-header-title">
+                    <h1 class="page-title">⚙️ 账户设置</h1>
+                </div>
+                <div class="page-header-actions">
+                    <a href="{% url 'accounts:profile_center' %}" class="btn-back">← 返回个人中心</a>
+                </div>
+            </div>
+        </div>
+        
+        {# 显示消息 - 由全局JavaScript系统处理 #}
+        {% if messages %}
+            <div style="display: none;">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {# 合并的用户信息卡片 #}
+        <div class="card card-gradient-light user-info-card">
+            <h2 class="section-title user-info-header">👤 {{ target_user.username }} 的账户信息</h2>
+            
+            {# 用户头像和基本信息 #}
+            <div class="two-column">
+                <div class="user-info-avatar">
+                    {% include 'blog/includes/user_avatar.html' with user=target_user current_user=user size='large' show_name=True link_to_profile=False %}
+                </div>
+                
+                {# 基本信息网格 #}
+                <div class="user-info-details">
+                    <div class="user-info-item">
+                        <div class="user-info-label">标识名（用户名）</div>
+                        <div class="user-info-value">{{ target_user.username }}</div>
+                    </div>
+                    <div class="user-info-item">
+                        <div class="user-info-label">显示名称</div>
+                        <div class="user-info-value">{{ target_user.profile.displayname|default:"未设置" }}</div>
+                    </div>
+                    <div class="user-info-item">
+                        <div class="user-info-label">邮箱</div>
+                        <div class="user-info-value">{{ target_user.email|default:"未设置" }}</div>
+                    </div>
+                    <div class="user-info-item">
+                        <div class="user-info-label">手机号</div>
+                        <div class="user-info-value">{{ target_user.profile.phone|default:"未设置" }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            {# 账户状态和时间信息 #}
+            <div class="status-grid">
+                {# 账户状态 #}
+                <div class="status-card">
+                    <h4 class="status-card-title">
+                        🔒 账户状态
+                    </h4>
+                    <div class="status-list">
+                        <div class="status-item">
+                            <span class="status-label">账户状态:</span>
+                            {% if target_user.is_active %}
+                                <span class="status-value success">
+                                    ✓ 正常
+                                </span>
+                            {% else %}
+                                <span class="status-value danger">
+                                    ✗ 禁用
+                                </span>
+                            {% endif %}
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">禁言状态:</span>
+                            {% if target_user.profile.is_currently_muted %}
+                                <span class="status-value danger">
+                                    🔇 禁言中
+                                </span>
+                            {% else %}
+                                <span class="status-value success">
+                                    ✓ 正常
+                                </span>
+                            {% endif %}
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">员工权限:</span>
+                            {% if target_user.is_staff %}
+                                <span class="status-value primary">
+                                    ⭐ 是
+                                </span>
+                            {% else %}
+                                <span class="status-value secondary">
+                                    ✗ 否
+                                </span>
+                            {% endif %}
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">超级管理员:</span>
+                            {% if target_user.is_superuser %}
+                                <span class="status-value primary">
+                                    ⭐ 是
+                                </span>
+                            {% else %}
+                                <span class="status-value secondary">
+                                    ✗ 否
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                {# 时间信息 #}
+                <div class="status-card">
+                    <h4 class="status-card-title">
+                        ⏰ 时间信息
+                    </h4>
+                    <div class="status-list">
+                        <div class="status-item">
+                            <span class="status-label">注册时间:</span>
+                            <span class="status-value">{{ target_user.date_joined|date:"Y年m月d日 H:i" }}</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">最后登录:</span>
+                            <span class="status-value">{{ target_user.last_login|date:"Y年m月d日 H:i" }}</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">注册时长:</span>
+                            <span class="status-value">{{ target_user.date_joined|timesince }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        {# 设置选项 - 横向布局 #}
+        <div class="page-content">
+            <div class="status-grid">
+                <div class="card setting-card" data-url="{% if is_own_page %}{% url 'accounts:edit_profile' %}{% else %}{% url 'accounts:edit_profile' %}?user_id={{ target_user.id }}{% endif %}">
+                    <div class="setting-card-content">
+                        <div class="setting-card-icon">📝</div>
+                        <div class="setting-card-text">
+                            <h3 class="setting-card-title">修改个人信息</h3>
+                            <p class="setting-card-description">
+                                {% if is_own_page %}
+                                    更新显示名称、邮箱、手机号等基本信息
+                                {% else %}
+                                    管理员特权：修改 {{ target_user.username }} 的个人信息
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="btn btn-primary btn-full">✏️ 修改信息</div>
+                </div>
+                
+                <div class="card setting-card" data-url="{% if is_own_page %}{% url 'accounts:change_password' %}{% else %}{% url 'accounts:change_password' %}?user_id={{ target_user.id }}{% endif %}">
+                    <div class="setting-card-content">
+                        <div class="setting-card-icon">🔒</div>
+                        <div class="setting-card-text">
+                            <h3 class="setting-card-title">修改密码</h3>
+                            <p class="setting-card-description">
+                                {% if is_own_page %}
+                                    设置新密码，保护账户安全
+                                {% else %}
+                                    管理员特权：修改 {{ target_user.username }} 的密码
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="btn btn-primary btn-full">🔑 修改密码</div>
+                </div>
+                
+                {% if is_own_page %}
+                <div class="card setting-card" data-url="{% url 'accounts:logout' %}">
+                    <div class="setting-card-content">
+                        <div class="setting-card-icon">🚪</div>
+                        <div class="setting-card-text">
+                            <h3 class="setting-card-title">退出登录</h3>
+                            <p class="setting-card-description">
+                                安全退出当前账户，保护账户隐私
+                            </p>
+                        </div>
+                    </div>
+                    <div class="btn btn-secondary btn-full">🚪 退出登录</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        {# 账户状态显示（如果有禁言/封禁） #}
+        {% if user.profile %}
+            {% if user.profile.is_currently_muted or user.profile.is_currently_banned %}
+                <div class="warning-card">
+                    {% if user.profile.is_currently_banned %}
+                        <div class="card-gradient-danger">
+                            <h4 class="warning-title">🚫 账户已被封禁</h4>
+                            <p class="warning-text">
+                                <strong>封禁原因：</strong>{{ user.profile.ban_reason|default:"无" }}
+                            </p>
+                            {% if user.profile.ban_until %}
+                                <p class="warning-detail">
+                                    <strong>解封时间：</strong>{{ user.profile.ban_until|date:"Y年m月d日 H:i" }}
+                                </p>
+                            {% else %}
+                                <p class="warning-detail">
+                                    <strong>永久封禁</strong>
+                                </p>
+                            {% endif %}
+                        </div>
+                    {% elif user.profile.is_currently_muted %}
+                        <div class="card-gradient-warning">
+                            <h4 class="mute-title">🔇 账户已被禁言</h4>
+                            <p class="mute-text">
+                                <strong>禁言原因：</strong>{{ user.profile.mute_reason|default:"无" }}
+                            </p>
+                            {% if user.profile.mute_until %}
+                                <p class="mute-detail">
+                                    <strong>解禁时间：</strong>{{ user.profile.mute_until|date:"Y年m月d日 H:i" }}
+                                </p>
+                            {% else %}
+                                <p class="mute-detail">
+                                    <strong>永久禁言</strong>
+                                </p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+    
+    <!-- 内联样式已移除，使用统一的CSS组件 -->
+    
+    <script>
+        // 账户设置页面交互功能
+        const UserSettings = {
+            // 初始化
+            init: function() {
+                this.bindCardClickEvents();
+            },
+            
+            // 绑定卡片点击事件
+            bindCardClickEvents: function() {
+                const settingCards = document.querySelectorAll('.setting-card');
+                settingCards.forEach(card => {
+                    card.addEventListener('click', function() {
+                        const url = this.getAttribute('data-url');
+                        if (url) {
+                            window.location.href = url;
+                        }
+                    });
+                });
+            }
+        };
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            UserSettings.init();
+        });
+    </script>
+{% endblock %}

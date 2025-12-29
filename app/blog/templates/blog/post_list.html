@@ -1,0 +1,131 @@
+{% extends 'core/base.html' %}
+
+{% block title %}博客列表 - Meow Blog{% endblock %}
+
+{% block content %}
+    <!-- 隐藏的CSRF token，用于AJAX请求 -->
+    {% csrf_token %}
+    <div class="fade-in-up page-container">
+        <div class="blog-header">
+            <div class="blog-icon">🐱</div>
+            <div>
+                <h1 class="blog-title">Meow 博客</h1>
+                <p class="blog-subtitle">分享知识，记录生活</p>
+            </div>
+        </div>
+
+        <main>
+            <!-- 搜索框 -->
+            {% include 'components/search_input.html' with name="search" value=search_query placeholder="搜索文章标题、内容或作者..." clear_url=request.path hidden_params=request.GET %}
+
+            <!-- 排序选项 -->
+            <div style="margin-bottom: 2rem; padding: 1rem; background: var(--bg-light); border-radius: 0.5rem; border: 1px solid rgba(251, 114, 153, 0.15);">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                        <span style="font-weight: 500; color: var(--text-primary);">排序方式：</span>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}sort=default" 
+                               class="sort-btn {% if current_sort == 'default' %}sort-btn-active{% else %}sort-btn-inactive{% endif %}" 
+                               style="padding: 0.5rem 1rem; border-radius: 0.5rem; text-decoration: none; font-weight: 500; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 0.25rem;">
+                                ❤️ 默认
+                            </a>
+                            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}sort=created" 
+                               class="sort-btn {% if current_sort == 'created' %}sort-btn-active{% else %}sort-btn-inactive{% endif %}" 
+                               style="padding: 0.5rem 1rem; border-radius: 0.5rem; text-decoration: none; font-weight: 500; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 0.25rem;">
+                                📅 创建时间
+                            </a>
+                            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}sort=updated" 
+                               class="sort-btn {% if current_sort == 'updated' %}sort-btn-active{% else %}sort-btn-inactive{% endif %}" 
+                               style="padding: 0.5rem 1rem; border-radius: 0.5rem; text-decoration: none; font-weight: 500; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 0.25rem;">
+                                🔄 更新时间
+                            </a>
+                            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}sort=likes" 
+                               class="sort-btn {% if current_sort == 'likes' %}sort-btn-active{% else %}sort-btn-inactive{% endif %}" 
+                               style="padding: 0.5rem 1rem; border-radius: 0.5rem; text-decoration: none; font-weight: 500; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 0.25rem;">
+                                ❤️ 点赞数
+                            </a>
+                        </div>
+                    </div>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'accounts:create_post' %}" class="btn btn-primary" style="padding: 0.5rem 1.5rem; font-weight: 600;">
+                            ✍️ 写文章
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- 搜索结果提示 -->
+            {% if search_query %}
+                <div style="margin-bottom: 1rem; padding: 0.75rem 1rem; background: var(--bg-light); border-radius: 0.5rem; border-left: 4px solid var(--primary-color);">
+                    <p style="margin: 0; color: var(--text-primary);">
+                        🔍 搜索 "<strong>{{ search_query }}</strong>" 的结果：
+                        {% if posts %}
+                            找到 {{ posts|length }} 篇文章
+                        {% else %}
+                            没有找到相关文章
+                        {% endif %}
+                    </p>
+                </div>
+            {% endif %}
+
+            {% if posts %}
+                <div style="display: flex; flex-direction: column; gap: 0.1rem;">
+                    {% for post in posts %}
+                        {% include 'blog/includes/post_card.html' with post=post card_style='list' show_author_link=True show_visibility=True show_stats=True show_content_preview=True %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card" style="text-align: center; padding: 4rem; background: var(--bg-light);">
+                    <div style="font-size: 5rem; margin-bottom: 2rem; opacity: 0.6;">
+                        {% if search_query %}🔍{% else %}📝{% endif %}
+                    </div>
+                    <h3 class="subsection-title" style="color: var(--text-secondary); text-align: center;">
+                        {% if search_query %}
+                            没有找到相关文章
+                        {% else %}
+                            还没有任何文章
+                        {% endif %}
+                    </h3>
+                    <p style="color: var(--text-muted); margin-bottom: 0; font-size: 1.1rem;">
+                        {% if search_query %}
+                            尝试使用其他关键词搜索，或者 <a href="{% url 'blog:post_list' %}" style="color: var(--primary-color);">查看所有文章</a>
+                        {% else %}
+                            成为第一个发布文章的人吧！
+                        {% endif %}
+                    </p>
+                </div>
+            {% endif %}
+            
+            {# 分页 #}
+            {% if posts.has_other_pages %}
+                <div style="display: flex; justify-content: center; margin-top: 3rem;">
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        {% if posts.has_previous %}
+                            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if current_sort != 'default' %}sort={{ current_sort }}&{% endif %}page={{ posts.previous_page_number }}" class="btn btn-secondary" style="padding: 0.75rem 1.5rem;">上一页</a>
+                        {% endif %}
+                        
+                        <span style="padding: 0.75rem 1.5rem; background-color: var(--bg-light); border-radius: 0.5rem; color: var(--text-primary); font-weight: 500;">
+                            第 {{ posts.number }} 页，共 {{ posts.paginator.num_pages }} 页
+                        </span>
+                        
+                        {% if posts.has_next %}
+                            <a href="?{% if search_query %}search={{ search_query }}&{% endif %}{% if current_sort != 'default' %}sort={{ current_sort }}&{% endif %}page={{ posts.next_page_number }}" class="btn btn-secondary" style="padding: 0.75rem 1.5rem;">下一页</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </main>
+    </div>
+    
+    <style>
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem !important;
+            }
+            
+            .card {
+                padding: 1.5rem !important;
+            }
+        }
+    </style>
+{% endblock %}

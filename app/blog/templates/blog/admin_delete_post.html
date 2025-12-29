@@ -1,0 +1,110 @@
+{% extends 'core/base.html' %}
+{% load blog_extras %}
+
+{% block title %}管理员删除文章 - Meow Blog{% endblock %}
+
+{% block content %}
+    <div class="fade-in-up" style="max-width: 700px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+            <h1 style="margin: 0; color: #dc3545; font-size: 2.5rem; font-weight: 300;">
+                {% if is_admin_delete %}
+                    🔨 管理员删除文章
+                {% else %}
+                    🗑️ 删除文章
+                {% endif %}
+            </h1>
+            <a href="{% get_post_url post %}" class="btn-back">← 返回文章</a>
+        </div>
+        
+        {# 显示消息 - 由全局JavaScript系统处理 #}
+        {% if messages %}
+            <div style="display: none;">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="card" style="border-left: 4px solid #dc3545;">
+            <div style="background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%); padding: 2rem; border-radius: 1rem; margin-bottom: 2rem;">
+                {% if is_admin_delete %}
+                    <h3 style="margin: 0 0 1rem 0; color: #721c24; display: flex; align-items: center; gap: 0.5rem;">
+                        🚨 管理员操作警告
+                    </h3>
+                    <ul style="margin: 0; padding-left: 1.5rem; color: #721c24; line-height: 1.6;">
+                        <li>您正在以超级管理员身份删除其他用户的文章</li>
+                        <li>此操作将永久删除文章及其所有评论</li>
+                        <li>删除后无法恢复，请谨慎操作</li>
+                        <li>建议先与文章作者沟通</li>
+                    </ul>
+                {% else %}
+                    <h3 style="margin: 0 0 1rem 0; color: #721c24; display: flex; align-items: center; gap: 0.5rem;">
+                        ⚠️ 确认删除文章
+                    </h3>
+                    <ul style="margin: 0; padding-left: 1.5rem; color: #721c24; line-height: 1.6;">
+                        <li>此操作将永久删除您的文章及其所有评论</li>
+                        <li>删除后无法恢复，请谨慎操作</li>
+                    </ul>
+                {% endif %}
+            </div>
+            
+            <div style="background: white; border: 2px solid #e9ecef; border-radius: 1rem; padding: 2rem; margin-bottom: 2rem;">
+                <h4 style="margin: 0 0 1rem 0; color: #2c3e50;">📄 文章信息</h4>
+                <div style="display: grid; gap: 0.75rem; color: #495057;">
+                    <p style="margin: 0;"><strong>标题：</strong>{{ post.title }}</p>
+                    <p style="margin: 0;"><strong>作者：</strong>{{ post.author.username }}</p>
+                    <p style="margin: 0;"><strong>创建时间：</strong>{{ post.created_at|date:"Y年m月d日 H:i" }}</p>
+                    {% if post.category %}
+                        <p style="margin: 0;"><strong>分类：</strong>{{ post.category.name }}</p>
+                    {% else %}
+                        <p style="margin: 0;"><strong>分类：</strong>未分类</p>
+                    {% endif %}
+                    <p style="margin: 0;"><strong>字数：</strong>{{ post.word_count }} 字</p>
+                    <p style="margin: 0;"><strong>评论数：</strong>{{ post.comments.count }} 条</p>
+                </div>
+                
+                <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 0.5rem;">
+                    <p style="margin: 0; color: #6c757d; font-size: 0.9rem;"><strong>文章预览：</strong></p>
+                    <p style="margin: 0.5rem 0; color: #495057; line-height: 1.6;">
+                        {{ post.content|truncatewords:50 }}
+                    </p>
+                </div>
+            </div>
+
+            <form method="post" style="margin-top: 2rem;">
+                {% csrf_token %}
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <button type="submit" class="btn btn-danger" style="padding: 1rem 2rem; font-weight: 600;">
+                        {% if is_admin_delete %}
+                            🔨 确认删除（管理员操作）
+                        {% else %}
+                            确认删除
+                        {% endif %}
+                    </button>
+                    <a href="{% get_post_url post %}" class="btn btn-secondary" style="padding: 1rem 2rem;">
+                        ❌ 取消
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <style>
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem !important;
+            }
+            
+            .card {
+                padding: 1.5rem !important;
+            }
+            
+            .fade-in-up > div:first-child {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+        }
+    </style>
+{% endblock %}

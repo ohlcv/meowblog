@@ -1,0 +1,16 @@
+<!-- 页面头部组件 -->
+<div class="page-header">
+    <div class="page-header-content">
+        <div class="page-header-title">
+            <h1 class="page-title">{{ title|default:"页面标题" }}</h1>
+            {% if subtitle %}
+                <p class="page-subtitle">{{ subtitle }}</p>
+            {% endif %}
+        </div>
+        {% if actions %}
+            <div class="page-header-actions">
+                {{ actions|safe }}
+            </div>
+        {% endif %}
+    </div>
+</div>

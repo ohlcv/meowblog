@@ -1,0 +1,204 @@
+/* ===== 用户头像组件样式 ===== */
+
+.user-avatar-container {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+/* 小尺寸头像 - 用于导航栏 */
+.user-avatar-small {
+    min-height: 40px;
+    width: 40px;
+}
+
+.user-avatar-small .user-avatar-circle {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+}
+
+.user-avatar-small .user-avatar-name {
+    font-size: 0.8rem;
+}
+
+.user-avatar-small .user-avatar-link,
+.user-avatar-small .user-avatar-static {
+    padding: 0.25rem 0.5rem;
+    gap: 0.5rem;
+}
+
+/* 中等尺寸头像 - 默认 */
+.user-avatar-medium {
+    min-height: 80px;
+    width: 80px;
+}
+
+.user-avatar-medium .user-avatar-circle {
+    width: 44px;
+    height: 44px;
+    font-size: 1.3rem;
+}
+
+.user-avatar-medium .user-avatar-name {
+    font-size: 0.95rem;
+}
+
+.user-avatar-medium .user-avatar-link,
+.user-avatar-medium .user-avatar-static {
+    padding: 0.5rem 1rem;
+    gap: 0.75rem;
+}
+
+/* 大尺寸头像 */
+.user-avatar-large {
+    min-height: 120px;
+    width: 120px;
+}
+
+.user-avatar-large .user-avatar-circle {
+    width: 56px;
+    height: 56px;
+    font-size: 1.6rem;
+}
+
+.user-avatar-large .user-avatar-name {
+    font-size: 1.1rem;
+}
+
+.user-avatar-large .user-avatar-link,
+.user-avatar-large .user-avatar-static {
+    padding: 0.75rem 1.25rem;
+    gap: 1rem;
+}
+
+/* 头像圆形样式 */
+.user-avatar-circle {
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(251, 114, 153, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+/* 头像链接样式 */
+.user-avatar-link {
+    color: #495057;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.user-avatar-link:hover {
+    transform: translateY(-1px);
+    text-decoration: none;
+    color: #495057;
+}
+
+/* 头像名称样式 */
+.user-avatar-name {
+    font-weight: 600;
+    text-align: center;
+    color: #000000;
+    transition: all 0.3s ease;
+}
+
+/* 关注按钮样式 */
+.follow-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.65rem;
+    border-radius: 1rem;
+    border: 1px solid;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 0.25rem;
+    white-space: nowrap;
+    min-width: 60px;
+}
+
+.follow-btn.following {
+    background: var(--success-color);
+    color: white;
+    border-color: var(--success-color);
+}
+
+.follow-btn.not-following {
+    background: transparent;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.follow-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 导航栏头像特殊样式 - 不显示关注按钮 */
+.user-avatar-navbar .follow-btn {
+    display: none !important;
+}
+
+/* 导航栏头像专用样式 - 提高特异性确保不被覆盖 */
+.navbar .user-avatar-navbar {
+    min-height: 40px !important;
+    width: 40px !important;
+    justify-content: center !important;
+}
+
+.navbar .user-avatar-navbar .user-avatar-circle {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 1rem !important;
+}
+
+.navbar .user-avatar-navbar .user-avatar-name {
+    display: none !important; /* 导航栏头像不显示用户名 */
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .user-avatar-small .user-avatar-circle {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9rem;
+    }
+    
+    .user-avatar-small .user-avatar-name {
+        font-size: 0.75rem;
+        max-width: 60px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    .navbar .user-avatar-navbar .user-avatar-circle {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 0.9rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .user-avatar-small .user-avatar-circle {
+        width: 24px;
+        height: 24px;
+        font-size: 0.8rem;
+    }
+    
+    .navbar .user-avatar-navbar .user-avatar-circle {
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 0.8rem !important;
+    }
+}

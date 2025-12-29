@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+
+{% block title %}删除分类 - Meow Blog{% endblock %}
+
+{% block content %}
+    <div style="max-width: 600px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h1 style="margin: 0; color: #333;">删除分类</h1>
+            <a href="{% url 'accounts:manuscript_management' %}" class="btn-back">← 返回稿件管理</a>
+        </div>
+
+        <div style="border: 1px solid #f5c6cb; border-radius: 0.5rem; padding: 2rem; background-color: #f8d7da;">
+            <h3 style="margin: 0 0 1rem 0; color: #721c24;">⚠️ 确认删除</h3>
+            
+            <p style="margin-bottom: 1rem; color: #721c24;">
+                你确定要删除分类 <strong>"{{ category.name }}"</strong> 吗？
+            </p>
+            
+            {% if category.post_set.count > 0 %}
+                <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; border-radius: 0.25rem; padding: 1rem; margin-bottom: 1rem;">
+                    <h4 style="margin: 0 0 0.5rem 0; color: #856404;">注意</h4>
+                    <p style="margin: 0; color: #856404;">
+                        此分类下有 <strong>{{ category.post_set.count }}</strong> 篇文章。删除分类后，这些文章将变为"未分类"状态，但文章本身不会被删除。
+                    </p>
+                </div>
+            {% else %}
+                <p style="color: #721c24;">此分类下没有文章，可以安全删除。</p>
+            {% endif %}
+
+            <form method="post" style="margin-top: 1.5rem;">
+                {% csrf_token %}
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" style="background-color: #dc3545; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 0.25rem; font-size: 1rem; cursor: pointer;">确认删除</button>
+                    <a href="{% url 'accounts:manuscript_management' %}" style="background-color: #6c757d; color: white; padding: 0.75rem 1.5rem; border-radius: 0.25rem; text-decoration: none; display: inline-block;">取消</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
